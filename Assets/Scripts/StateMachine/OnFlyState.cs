@@ -7,18 +7,21 @@ namespace GlideGame.Statemachine.States
 {
     public class OnFlyState : State
     {
-        public OnFlyState(StateMachine stateMachine) : base(stateMachine)
+        private PlayerController _playerController;
+        public OnFlyState(StateMachine stateMachine, PlayerController playerController) : base(stateMachine)
         {
+            _playerController = playerController;
         }
         public override void Enter()
         {
             base.Enter();
-            PlayerController.Instance.InitPlayer();
+            CameraController.Instance.SetCameraController(_playerController.transform, _playerController.CameraOffset);
+            _playerController.InitPlayer();
         }
         public override void Update()
         {
             base.Update();
-            PlayerController.Instance.UpdatePlayer();
+            _playerController.UpdatePlayer();
         }
     }
 }

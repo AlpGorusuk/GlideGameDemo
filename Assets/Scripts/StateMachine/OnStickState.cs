@@ -9,17 +9,18 @@ namespace GlideGame.Statemachine.States
     public class OnStickState : State
     {
         private StickController _stickController;
-        public OnStickState(StateMachine stateMachine, StickController stickController) : base(stateMachine)
+        private PlayerController _playerController;
+        public OnStickState(StateMachine stateMachine, StickController stickController, PlayerController playerController) : base(stateMachine)
         {
             _stickController = stickController;
+            _playerController = playerController;
         }
         public override void Enter()
         {
             base.Enter();
-            _stickController.ReleaseCallback += () =>
-            {
-                stateMachine.ChangeState(GameManager.Instance.onFlyState);
-            };
+            CameraController.Instance.SetCameraController(_stickController.transform, _stickController.CameraOffset);
+            _stickController.ReleaseCallback += _playerController.ThrowPlayerCallback;
+            _stickController.ReleaseCallback += x => { GameManager.Instance.stateMachine.ChangeState(GameManager.Instance.onFlyState); };
         }
         public override void Update()
         {
@@ -32,7 +33,7 @@ namespace GlideGame.Statemachine.States
         public override void Exit()
         {
             base.Exit();
-            _stickController.ReleaseCallback -= () => stateMachine.ChangeState(GameManager.Instance.onFlyState);
+            _stickController.ReleaseCallback -= _playerController.ThrowPlayerCallback;
         }
     }
 }

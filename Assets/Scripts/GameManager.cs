@@ -14,8 +14,8 @@ namespace GlideGame.Managers
         private void Start()
         {
             stateMachine = new StateMachine();
-            onStickState = new OnStickState(stateMachine, StickController.Instance);
-            onFlyState = new OnFlyState(stateMachine);
+            onStickState = new OnStickState(stateMachine, StickController.Instance, PlayerController.Instance);
+            onFlyState = new OnFlyState(stateMachine, PlayerController.Instance);
 
             stateMachine.Initialize(onStickState);
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using GlideGame.Interfaces;
@@ -6,15 +7,25 @@ using UnityEngine;
 
 namespace GlideGame.Controllers
 {
-    public class PlayerController : Singleton<PlayerController>, IPlayerController
+    [RequireComponent(typeof(Rigidbody))]
+    public class PlayerController : Singleton<PlayerController>, IPlayerController, ICameraFollow
     {
-        public Vector3 Velocity { get; private set; }
-        public float Radius { get; private set; }
+        [SerializeField] private float angle;
+        public float Angle { get { return angle; } private set { angle = value; } }
         public FrameInput Input { get; private set; }
-        public bool JumpingThisFrame { get; private set; }
-        public bool LandingThisFrame { get; private set; }
-        public Vector3 RawMovement { get; private set; }
         public bool Grounded { get; private set; }
+        private Rigidbody rigidBody;
+        public Rigidbody RigidBody { get { return rigidBody; } private set { rigidBody = value; } }
+        [SerializeField] private Vector3 cameraOffset;
+        public Vector3 CameraOffset { get { return cameraOffset; } private set { cameraOffset = value; } }
+
+        public Action<float> ThrowPlayerCallback;
+        private void Start()
+        {
+            rigidBody = GetComponent<Rigidbody>();
+            ThrowPlayerCallback = Throw;
+        }
+
         public void InitPlayer()
         {
             SetPlayerParent();
@@ -29,6 +40,18 @@ namespace GlideGame.Controllers
         {
             Transform targetTransform = GameplayController.Instance.LevelTransform;
             transform.SetParent(targetTransform);
+        }
+        private void Throw(float speed)
+        {
+            float radianAngle = Angle * Mathf.Deg2Rad;
+
+            float xVel = speed * Mathf.Cos(radianAngle);
+            float yVel = speed * Mathf.Sin(radianAngle);
+
+            Vector3 throwSpeed = new Vector3(0, yVel, xVel);
+            RigidBody.isKinematic = false;
+            RigidBody.velocity = throwSpeed;
+            Debug.Log("enter here");
         }
 
         #region Gather Input
