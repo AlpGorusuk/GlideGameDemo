@@ -42,6 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4530613541617299818}
   - component: {fileID: 5788808609948818448}
+  - component: {fileID: 5907071266922593127}
   m_Layer: 0
   m_Name: Stick_long_Animated
   m_TagString: Untagged
@@ -87,6 +88,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5907071266922593127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613792315533329273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ed6fccbfed8be4c81a69aa87076def, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1179141430728455196
 GameObject:
   m_ObjectHideFlags: 0
