@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StickSetting
   m_EditorClassIdentifier: 
   cameraOffset: {x: 36, y: 15, z: -36}
-  dragStartPosition: {x: 349.57858, y: 515.85956, z: 0}
+  dragStartPosition: {x: 412.10703, y: 423.8038, z: 0}
   maxDragDistance: 200
   minDragDistance: 50
   dragDelay: 0.001

@@ -523,6 +523,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3285023203185628935}
     m_Modifications:
+    - target: {fileID: 5622691568900412527, guid: fbe8b26267e8d0a4b8e8591dea08b134,
+        type: 3}
+      propertyPath: cameraOffset.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622691568900412527, guid: fbe8b26267e8d0a4b8e8591dea08b134,
+        type: 3}
+      propertyPath: cameraOffset.z
+      value: -15
+      objectReference: {fileID: 0}
     - target: {fileID: 6656147572071917701, guid: fbe8b26267e8d0a4b8e8591dea08b134,
         type: 3}
       propertyPath: m_RootOrder

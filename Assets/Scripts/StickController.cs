@@ -55,6 +55,7 @@ namespace GlideGame.Controllers
                 Vector3 dragDelta = dragCurrentPosition - stickSetting.dragStartPosition;
                 AnimationTime = dragDelta.x * stickSetting.dragDelay * dragDeltaConverter;
                 Animator.Play(AnimationClip.name, animatorLayer, Mathf.Clamp01(AnimationTime / AnimationClip.length));
+                float dragDistance = Vector3.Distance(dragCurrentPosition, stickSetting.dragStartPosition);
             }
         }
 

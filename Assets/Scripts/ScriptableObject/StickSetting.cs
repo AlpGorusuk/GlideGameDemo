@@ -11,8 +11,10 @@ namespace GlideGame.ScriptableObjects
     {
         public Vector3 cameraOffset;
         public Vector3 dragStartPosition;
-        public float maxDragDistance = 5.0f;
-        public float minDragDistance = 0.0f;
+        [Range(200f, 400f)]
+        public float maxDragDistance = 200f;
+        [Range(50f, 100f)]
+        public float minDragDistance = 50f;
         public float dragDelay = 0.001f;
     }
 }

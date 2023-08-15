@@ -8,7 +8,7 @@ namespace GlideGame.Controllers
 {
     public class CameraController : Singleton<CameraController>
     {
-        public float smoothSpeed = 0.125f;
+        public float smoothTime = 0.3f;
 
         private CameraStateManager stateManager;
         public override void Awake()
@@ -19,10 +19,10 @@ namespace GlideGame.Controllers
 
         public void SetCameraController(Transform target, Vector3 offset)
         {
-            stateManager.SetState(new FollowState(target, transform, offset, smoothSpeed));
+            stateManager.SetState(new FollowState(target, transform, offset, smoothTime));
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             stateManager.UpdateState();
         }

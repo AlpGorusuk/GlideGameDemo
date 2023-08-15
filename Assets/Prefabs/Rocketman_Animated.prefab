@@ -813,6 +813,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angle: 30
+  cameraOffset: {x: 0, y: 0, z: 0}
+  playerModel: {fileID: 1796475980245879811}
 --- !u!54 &4775149316153749769
 Rigidbody:
   m_ObjectHideFlags: 0
