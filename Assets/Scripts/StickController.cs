@@ -67,7 +67,8 @@ namespace GlideGame.Controllers
             {
                 Vector3 dragCurrentPosition = Input.mousePosition;
                 Vector3 dragDelta = dragCurrentPosition - stickSetting.dragStartPosition;
-                AnimationTime = dragDelta.x * stickSetting.dragDelay * dragDeltaConverter;
+
+                AnimationTime = dragDelta.x * stickSetting.dragOffset * dragDeltaConverter;
                 Animator.Play(AnimationClip.name, animatorLayer, Mathf.Clamp01(AnimationTime / AnimationClip.length));
             }
         }
@@ -76,12 +77,16 @@ namespace GlideGame.Controllers
         {
             if (Input.GetMouseButtonUp(0))
             {
-                Vector3 dragEndPosition = Input.mousePosition;
-                float dragDistance = Mathf.Clamp(Vector3.Distance(dragEndPosition, stickSetting.dragStartPosition), stickSetting.minDragDistance, stickSetting.maxDragDistance);
-
                 isBendEnable = false;
+
+                Vector3 dragEndPosition = Input.mousePosition;
+                var clampVal = Vector3.Distance(dragEndPosition, stickSetting.dragStartPosition);
+                float dragDistance = Mathf.Clamp(clampVal, stickSetting.minDragDistance, stickSetting.maxDragDistance);
+                dragDistance *= 0.5f;
+
                 AnimationClip = Animator.GetAnimationClipByName(ReleaseAnimationName);
                 Animator.Play(AnimationClip.name, animatorLayer, 1 - Mathf.Clamp01(AnimationTime / AnimationClip.length));
+
                 ReleaseCallback?.Invoke(dragDistance);
             }
         }

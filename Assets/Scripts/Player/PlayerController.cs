@@ -43,12 +43,12 @@ namespace GlideGame.Controllers
         private Vector3 dragStartPosition;
         private Vector3 dragDelta;
         //
-        public Action<float> ThrowPlayerCallback;
+        public Action<float> HandleThrowCallback;
         private void Start()
         {
             SetRbIsKinematic(true);
-            ThrowPlayerCallback += HandleThrowCallback;
-            ThrowPlayerCallback += x => { isPlaying = true; };
+            HandleThrowCallback += HandleThrow;
+            HandleThrowCallback += x => { isPlaying = true; };
         }
 
         public void InitPlayer()
@@ -58,8 +58,8 @@ namespace GlideGame.Controllers
         }
         private void OnDestroy()
         {
-            ThrowPlayerCallback -= HandleThrowCallback;
-            ThrowPlayerCallback -= x => { isPlaying = true; };
+            HandleThrowCallback -= HandleThrow;
+            HandleThrowCallback -= x => { isPlaying = true; };
         }
 
         private void Update()
@@ -69,14 +69,6 @@ namespace GlideGame.Controllers
             if (!isHandleRocketEnable) { HandleRotation(); }
 
         }
-
-        private void FixedUpdate()
-        {
-            if (!isPlaying) return;
-
-            HandleRocketPhysics();
-        }
-
         private void SetPlayerParent()
         {
             Transform targetTransform = GameplayController.Instance.LevelTransform;
@@ -86,14 +78,15 @@ namespace GlideGame.Controllers
         {
             RigidBody.isKinematic = isKinematic;
         }
-        private void HandleThrowCallback(float speed)
+        private void HandleThrow(float speed)
         {
+            Debug.Log(speed);
             float radianAngle = playerSetting.throwAngle * Mathf.Deg2Rad;
             float xVel = speed * Mathf.Cos(radianAngle);
             float yVel = speed * Mathf.Sin(radianAngle);
 
             Vector3 throwSpeed = new Vector3(0, yVel, xVel);
-            RigidBody.AddForce(throwSpeed, ForceMode.VelocityChange);
+            RigidBody.AddForce(throwSpeed, ForceMode.Impulse);
             Debug.Log("Thrown!");
         }
 
@@ -115,18 +108,14 @@ namespace GlideGame.Controllers
             {
                 Vector3 dragCurrentPosition = Input.mousePosition;
                 dragDelta = dragCurrentPosition - dragStartPosition;
+                transform.Translate(Vector3.right * Time.deltaTime * dragDelta.x * 20);
             }
 
             if (Input.GetMouseButtonUp(0))
             {
                 isHandleRocketEnable = false;
             }
-        }
-
-        private void HandleRocketPhysics()
-        {
-            Vector3 targetPosition = transform.position + new Vector3(dragDelta.x, 0, 0) * 1f * Time.deltaTime;
-            transform.position = targetPosition;
+            dragStartPosition = Input.mousePosition;
         }
     }
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraOffset: {x: 36, y: 15, z: -36}
   cameraRotation: {x: 0, y: -0.38268346, z: 0, w: 0.9238795}
-  dragStartPosition: {x: 412.10703, y: 423.8038, z: 0}
+  dragStartPosition: {x: 654.4046, y: 239.6923, z: 0}
   maxDragDistance: 200
-  minDragDistance: 50
-  dragDelay: 0.001
+  minDragDistance: 100
+  dragOffset: 0.001
