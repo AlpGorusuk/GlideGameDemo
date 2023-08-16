@@ -65,8 +65,12 @@ namespace GlideGame.Controllers
         private void Update()
         {
             if (!isPlaying) return;
+            HandleInput();
+        }
+        private void FixedUpdate()
+        {
+            if (!isHandleRocketEnable) { HandleRotation(); return; }
             HandleRocket();
-            if (!isHandleRocketEnable) { HandleRotation(); }
 
         }
         private void SetPlayerParent()
@@ -93,10 +97,26 @@ namespace GlideGame.Controllers
         private void HandleRotation()
         {
             Quaternion rotation = Quaternion.Euler(Vector3.right * playerSetting.rotationSpeed * Time.deltaTime);
-            transform.rotation *= rotation;
+            RigidBody.MoveRotation(RigidBody.rotation * rotation);
         }
 
         private void HandleRocket()
+        {
+            float forceAmount = dragDelta.x * playerSetting.dragOffset * Time.deltaTime;
+            forceAmount = Mathf.Clamp(forceAmount, playerSetting.minForceAmount, playerSetting.maxForceAmount);
+            Vector3 force = Vector3.right * forceAmount;
+            RigidBody.AddForce(force, ForceMode.Force);
+
+            Vector3 currentVelocity = RigidBody.velocity;
+            Vector3 newVelocity = new Vector3(currentVelocity.x, currentVelocity.y * 0.5f, currentVelocity.z);
+            RigidBody.velocity = newVelocity;
+
+            float rotationAmount = forceAmount * playerSetting.rotationMultiplier;
+            // Yeni rotasyon açısını hesapla ve sınırla
+            Quaternion deltaRotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(rotationAmount, -14f, 14f) * Time.deltaTime);
+            RigidBody.MoveRotation(RigidBody.rotation * deltaRotation);
+        }
+        private void HandleInput()
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -108,14 +128,13 @@ namespace GlideGame.Controllers
             {
                 Vector3 dragCurrentPosition = Input.mousePosition;
                 dragDelta = dragCurrentPosition - dragStartPosition;
-                transform.Translate(Vector3.right * Time.deltaTime * dragDelta.x * 20);
             }
 
             if (Input.GetMouseButtonUp(0))
             {
                 isHandleRocketEnable = false;
+                dragDelta = Vector3.zero;
             }
-            dragStartPosition = Input.mousePosition;
         }
     }
 }

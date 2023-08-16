@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: PlayerSetting
   m_EditorClassIdentifier: 
   rotationSpeed: 720
-  dragStartPosition: {x: 216.70567, y: 248.37682, z: 0}
+  rotationMultiplier: 5
   throwAngle: 30
   cameraOffset: {x: 0, y: 50, z: -45}
   cameraRotation: {x: 0.25881904, y: 0, z: 0, w: 0.9659258}
+  dragOffset: 20
+  maxForceAmount: 10
+  minForceAmount: -10

@@ -14,9 +14,9 @@ namespace GlideGame.ScriptableObjects
         public Quaternion cameraRotation;
         [Header("Drag")]
         public Vector3 dragStartPosition;
-        // [Range(200f, 400f)]
+        [Range(200f, 400f)]
         public float maxDragDistance = 200f;
-        // [Range(50f, 100f)]
+        [Range(50f, 100f)]
         public float minDragDistance = 50f;
         public float dragOffset = 0.001f;
     }
