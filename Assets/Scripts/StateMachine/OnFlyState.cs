@@ -15,13 +15,8 @@ namespace GlideGame.Statemachine.States
         public override void Enter()
         {
             base.Enter();
-            CameraController.Instance.SetCameraController(_playerController.transform, _playerController.CameraOffset);
+            CameraController.Instance.SetCameraController(_playerController.transform, _playerController.CameraRotation, _playerController.CameraOffset);
             _playerController.InitPlayer();
-        }
-        public override void Update()
-        {
-            base.Update();
-            _playerController.UpdatePlayer();
         }
     }
 }

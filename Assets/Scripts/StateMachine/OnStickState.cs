@@ -18,21 +18,16 @@ namespace GlideGame.Statemachine.States
         public override void Enter()
         {
             base.Enter();
-            CameraController.Instance.SetCameraController(_stickController.transform, _stickController.CameraOffset);
+            CameraController.Instance.SetCameraController(_stickController.transform, _stickController.CameraRotation, _stickController.CameraOffset);
+            _stickController.ActivateStickCallback?.Invoke();
+            _stickController.ReleaseCallback += x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
             _stickController.ReleaseCallback += _playerController.ThrowPlayerCallback;
-            _stickController.ReleaseCallback += x => { GameManager.Instance.stateMachine.ChangeState(GameManager.Instance.onFlyState); };
-        }
-        public override void Update()
-        {
-            base.Update();
-            if (_stickController != null)
-            {
-                _stickController.UpdateStick();
-            }
         }
         public override void Exit()
         {
             base.Exit();
+            _stickController.DeActivateStickCallback?.Invoke();
+            _stickController.ReleaseCallback -= x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
             _stickController.ReleaseCallback -= _playerController.ThrowPlayerCallback;
         }
     }

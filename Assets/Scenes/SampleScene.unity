@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 2
   m_FogDensity: 0.002
@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 6c047cda2a5def04c9eacc2e07d1ad0c, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: fb20f55ebf7e1974bb5a0fe3664acd90, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.15071633, g: 0.33093533, b: 0.73952615, a: 1}
+  m_IndirectSpecularColor: {r: 0.36467952, g: 0.35277697, b: 0.5820731, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: b3d41b8c41c5d0149ab83691cf8c6eff,
+    type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: b3727d7bbf60cea44b64de41d9b0b53a,
     type: 2}
 --- !u!196 &4
@@ -233,14 +234,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0, y: -0.36893576, z: 0, w: 0.9294549}
-  m_LocalPosition: {x: 36, y: 15, z: -36}
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: 0, y: 15, z: -45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1555771678}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -43.3, z: 0}
+  m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -856,6 +857,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stick_long_Animated
       objectReference: {fileID: 0}
+    - target: {fileID: 613792315533329273, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 798301285356529210, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -930,6 +936,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90.023865
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222506472363441159, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
+        type: 3}
+      propertyPath: cameraOffset.y
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222506472363441159, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
+        type: 3}
+      propertyPath: cameraOffset.z
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222506472363441159, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
+        type: 3}
+      propertyPath: cameraRotation.w
+      value: 0.9659258
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222506472363441159, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
+        type: 3}
+      propertyPath: cameraRotation.x
+      value: 0.25881904
       objectReference: {fileID: 0}
     - target: {fileID: 3848805820210921811, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
         type: 3}
@@ -1049,6 +1075,11 @@ PrefabInstance:
     - target: {fileID: 4530613541617299818, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530645768114454765, guid: 78230bfe9fb754044a993b6a0c7bb8cc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4828017372731783163, guid: 78230bfe9fb754044a993b6a0c7bb8cc,

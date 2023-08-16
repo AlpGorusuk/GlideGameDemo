@@ -9,16 +9,18 @@ namespace GlideGame.Statemachine.States
     {
         private Transform target;
         private Transform cameraTransform;
+        private Quaternion desiredRotation;
         private Vector3 offset;
         private float smoothTime;
         private Vector3 velocity = Vector3.zero;
 
-        public FollowState(Transform target, Transform cameraTransform, Vector3 offset, float smoothTime)
+        public FollowState(Transform target, Transform cameraTransform, Quaternion desiredRotation, Vector3 offset, float smoothTime)
         {
             this.target = target;
             this.cameraTransform = cameraTransform;
             this.offset = offset;
             this.smoothTime = smoothTime;
+            this.desiredRotation = desiredRotation;
         }
 
         public void UpdateState()
@@ -27,7 +29,7 @@ namespace GlideGame.Statemachine.States
             Vector3 smoothedPosition = Vector3.SmoothDamp(cameraTransform.position, desiredPosition, ref velocity, smoothTime);
             cameraTransform.position = smoothedPosition;
 
-            cameraTransform.LookAt(target);
+            cameraTransform.rotation = desiredRotation;
         }
     }
 

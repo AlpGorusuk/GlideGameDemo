@@ -6,18 +6,8 @@ namespace GlideGame.Interfaces
 {
     public interface IPlayerController
     {
-        public GameObject PlayerModel { get; }
-        public FrameInput Input { get; }
-        public bool Grounded { get; }
         public Rigidbody RigidBody { get; }
-        public float Angle { get; }
-
+        public bool isPlaying { get; }
         public void InitPlayer();
-        public void UpdatePlayer();
-    }
-    public struct FrameInput
-    {
-        public float Horizontal;
-        public bool Vertical;
     }
 }

@@ -1,79 +1,132 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using GlideGame.Interfaces;
-using GlideGame.Statemachine;
-using GlideGame.Statemachine.States;
+using GlideGame.ScriptableObjects;
 using GlideGame.Utils;
 using UnityEngine;
 
 namespace GlideGame.Controllers
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerController : Singleton<PlayerController>, IPlayerController, ICameraFollow
+    public class PlayerController : Singleton<PlayerController>, IPlayerController, ICameraFollow, IAnimationController
     {
-        //Interfaces
-        [SerializeField] private float angle;
-        public float Angle { get { return angle; } private set { angle = value; } }
-        public FrameInput Input { get; private set; }
-        public bool Grounded { get; private set; }
-        private Rigidbody rigidBody;
-        public Rigidbody RigidBody { get { return rigidBody; } private set { rigidBody = value; } }
-        [SerializeField] private Vector3 cameraOffset;
-        public Vector3 CameraOffset { get { return cameraOffset; } private set { cameraOffset = value; } }
-        [SerializeField] private GameObject playerModel;
-        public GameObject PlayerModel { get { return playerModel; } private set { playerModel = value; } }
-        //Actions
-        public Action<float> ThrowPlayerCallback;
-        //States
-        public StateMachine stateMachine;
-        public OnRotateState onRotateState;
-        public OnRocketState onRocketState;
+        [SerializeField] private PlayerSetting playerSetting;
+        //
+        private Animator animator;
+        public Animator Animator
+        {
+            get
+            {
+                if (animator == null)
+                    animator = GetComponent<Animator>();
+                return animator;
+            }
+        }
 
+        private Rigidbody _rigidbody;
+        public Rigidbody RigidBody
+        {
+            get
+            {
+                if (_rigidbody == null)
+                    _rigidbody = GetComponent<Rigidbody>();
+                return _rigidbody;
+            }
+        }
+        public Vector3 CameraOffset => playerSetting.cameraOffset;
+        public Quaternion CameraRotation => playerSetting.cameraRotation;
+        //
+        public AnimationClip AnimationClip => throw new NotImplementedException();
+        public float AnimationTime => throw new NotImplementedException();
+        //
+        public bool isPlaying { get; set; }
+        public bool isHandleRocketEnable { get; set; }
+        private Vector3 dragStartPosition;
+        private Vector3 dragDelta;
+        //
+        public Action<float> ThrowPlayerCallback;
         private void Start()
         {
-            rigidBody = GetComponent<Rigidbody>();
-            ThrowPlayerCallback = Throw;
-
-            stateMachine = new StateMachine();
-            onRotateState = new OnRotateState(stateMachine);
-            onRocketState = new OnRocketState(stateMachine);
+            SetRbIsKinematic(true);
+            ThrowPlayerCallback += HandleThrowCallback;
+            ThrowPlayerCallback += x => { isPlaying = true; };
         }
+
         public void InitPlayer()
         {
+            SetRbIsKinematic(false);
             SetPlayerParent();
         }
-
-        public void UpdatePlayer()
+        private void OnDestroy()
         {
+            ThrowPlayerCallback -= HandleThrowCallback;
+            ThrowPlayerCallback -= x => { isPlaying = true; };
         }
 
-        public void SetPlayerParent()
+        private void Update()
+        {
+            if (!isPlaying) return;
+            HandleRocket();
+            if (!isHandleRocketEnable) { HandleRotation(); }
+
+        }
+
+        private void FixedUpdate()
+        {
+            if (!isPlaying) return;
+
+            HandleRocketPhysics();
+        }
+
+        private void SetPlayerParent()
         {
             Transform targetTransform = GameplayController.Instance.LevelTransform;
             transform.SetParent(targetTransform);
         }
-        private void Throw(float speed)
+        private void SetRbIsKinematic(bool isKinematic)
         {
-            float radianAngle = Angle * Mathf.Deg2Rad;
-
+            RigidBody.isKinematic = isKinematic;
+        }
+        private void HandleThrowCallback(float speed)
+        {
+            float radianAngle = playerSetting.throwAngle * Mathf.Deg2Rad;
             float xVel = speed * Mathf.Cos(radianAngle);
             float yVel = speed * Mathf.Sin(radianAngle);
 
             Vector3 throwSpeed = new Vector3(0, yVel, xVel);
-            RigidBody.isKinematic = false;
             RigidBody.AddForce(throwSpeed, ForceMode.VelocityChange);
             Debug.Log("Thrown!");
         }
 
-        #region Gather Input
-        private void GatherInput()
+        private void HandleRotation()
         {
-            Input = new FrameInput
-            {
-
-            };
+            Quaternion rotation = Quaternion.Euler(Vector3.right * playerSetting.rotationSpeed * Time.deltaTime);
+            transform.rotation *= rotation;
         }
-        #endregion
+
+        private void HandleRocket()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                dragStartPosition = Input.mousePosition;
+                isHandleRocketEnable = true;
+            }
+
+            if (isHandleRocketEnable)
+            {
+                Vector3 dragCurrentPosition = Input.mousePosition;
+                dragDelta = dragCurrentPosition - dragStartPosition;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                isHandleRocketEnable = false;
+            }
+        }
+
+        private void HandleRocketPhysics()
+        {
+            Vector3 targetPosition = transform.position + new Vector3(dragDelta.x, 0, 0) * 1f * Time.deltaTime;
+            transform.position = targetPosition;
+        }
     }
 }

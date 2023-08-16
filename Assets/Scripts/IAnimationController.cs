@@ -8,7 +8,6 @@ namespace GlideGame
     {
         public Animator Animator { get; }
         public AnimationClip AnimationClip { get; }
-        public bool isPlaying { get; }
         public float AnimationTime { get; }
     }
 }

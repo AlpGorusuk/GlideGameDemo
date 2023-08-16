@@ -23,5 +23,9 @@ namespace GlideGame.Managers
         {
             stateMachine.Update_Statemachine();
         }
+        private void FixedUpdate()
+        {
+            stateMachine.FixedUpdate_Statemachine();
+        }
     }
 }

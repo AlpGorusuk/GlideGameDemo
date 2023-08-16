@@ -7,5 +7,6 @@ namespace GlideGame.Interfaces
     public interface ICameraFollow
     {
         public Vector3 CameraOffset { get; }
+        public Quaternion CameraRotation { get; }
     }
 }
