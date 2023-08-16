@@ -1,15 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GlideGame.Animations;
 using GlideGame.Extensions;
 using GlideGame.Interfaces;
+using GlideGame.Managers;
 using GlideGame.ScriptableObjects;
 using GlideGame.Utils;
 using UnityEngine;
 
 namespace GlideGame.Controllers
 {
-    public class StickController : Singleton<StickController>, IAnimationController, ICameraFollow
+    public class StickController : Singleton<StickController>, ICameraFollow
     {
         [SerializeField] private StickSetting stickSetting;
         [SerializeField] private Transform launchPoint;
@@ -22,8 +24,8 @@ namespace GlideGame.Controllers
         //Magic Numbers
         private const int animatorLayer = -1;
         private const float dragDeltaConverter = -1;
-        private const string BendAnimationName = "Armature_Bend_Stick";
-        private const string ReleaseAnimationName = "Armature_Release_Stick";
+        private const string BendAnimationName = "Bend";
+        private const string ReleaseAnimationName = "Release";
         //Animation Control
         private Animator animator;
         public Animator Animator
@@ -40,11 +42,16 @@ namespace GlideGame.Controllers
         //Camera
         public Vector3 CameraOffset => stickSetting.cameraOffset;
         public Quaternion CameraRotation => stickSetting.cameraRotation;
+        //Managers
+        private AnimationManager animationManager = new AnimationManager();
 
         private void Start()
         {
             ActivateStickCallback = () => { isStickEnable = true; };
             DeActivateStickCallback = () => { isStickEnable = false; };
+            //Anim command
+            animationManager.SetCommand(new IdleAnimationCommand(Animator));
+            animationManager.ExecuteCommand();
         }
 
         public void Update()
@@ -69,7 +76,9 @@ namespace GlideGame.Controllers
                 Vector3 dragDelta = dragCurrentPosition - stickSetting.dragStartPosition;
 
                 AnimationTime = dragDelta.x * stickSetting.dragOffset * dragDeltaConverter;
-                PlayAnimator(AnimationClip.name, animatorLayer, Mathf.Clamp01(AnimationTime / AnimationClip.length));
+                animationManager.SetCommand(new BendAnimationCommand(Animator));
+                float normalizedTime = Mathf.Clamp01(AnimationTime / AnimationClip.length);
+                animationManager.ExecuteCommand(animatorLayer, Mathf.Clamp01(AnimationTime / AnimationClip.length));
             }
         }
 
@@ -85,15 +94,12 @@ namespace GlideGame.Controllers
                 dragDistance *= 0.5f;
 
                 AnimationClip = Animator.GetAnimationClipByName(ReleaseAnimationName);
-                PlayAnimator(AnimationClip.name, animatorLayer, 1 - Mathf.Clamp01(AnimationTime / AnimationClip.length));
+                animationManager.SetCommand(new ReleaseAnimationCommand(Animator));
+                float normalizedTime = 1 - Mathf.Clamp01(AnimationTime / AnimationClip.length);
+                animationManager.ExecuteCommand(animatorLayer, normalizedTime);
 
                 ReleaseCallback?.Invoke(dragDistance);
             }
-        }
-
-        public void PlayAnimator(string name, int layer = 0, float normalizedTime = 0)
-        {
-            Animator.Play(name, layer, normalizedTime);
         }
     }
 }
