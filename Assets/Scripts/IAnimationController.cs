@@ -9,5 +9,6 @@ namespace GlideGame
         public Animator Animator { get; }
         public AnimationClip AnimationClip { get; }
         public float AnimationTime { get; }
+        public void PlayAnimator(string name, int layer = 0, float normalizedTime = 0);
     }
 }

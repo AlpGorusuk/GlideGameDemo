@@ -1,5 +1,7 @@
 using System;
+using GlideGame.Animations;
 using GlideGame.Interfaces;
+using GlideGame.Managers;
 using GlideGame.ScriptableObjects;
 using GlideGame.Utils;
 using UnityEngine;
@@ -7,7 +9,7 @@ using UnityEngine;
 namespace GlideGame.Controllers
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerController : Singleton<PlayerController>, IPlayerController, ICameraFollow, IAnimationController
+    public class PlayerController : Singleton<PlayerController>, IPlayerController, ICameraFollow
     {
         [SerializeField] private PlayerSetting playerSetting;
         //
@@ -35,20 +37,23 @@ namespace GlideGame.Controllers
         public Vector3 CameraOffset => playerSetting.cameraOffset;
         public Quaternion CameraRotation => playerSetting.cameraRotation;
         //
-        public AnimationClip AnimationClip => throw new NotImplementedException();
-        public float AnimationTime => throw new NotImplementedException();
-        //
         public bool isPlaying { get; set; }
         public bool isHandleRocketEnable { get; set; }
         private Vector3 dragStartPosition;
         private Vector3 dragDelta;
         //
         public Action<float> HandleThrowCallback;
+        //Managers
+        private AnimationManager animationManager = new AnimationManager();
         private void Start()
         {
             SetRbIsKinematic(true);
+
             HandleThrowCallback += HandleThrow;
             HandleThrowCallback += x => { isPlaying = true; };
+
+            animationManager.SetCommand(new IdleAnimationCommand(Animator));
+            animationManager.ExecuteCommand();
         }
 
         public void InitPlayer()
@@ -65,13 +70,12 @@ namespace GlideGame.Controllers
         private void Update()
         {
             if (!isPlaying) return;
-            HandleInput();
+            HandleDrag();
         }
         private void FixedUpdate()
         {
-            if (!isHandleRocketEnable) { HandleRotation(); return; }
+            if (!isHandleRocketEnable && isPlaying) { HandleRotation(); return; }
             HandleRocket();
-
         }
         private void SetPlayerParent()
         {
@@ -116,12 +120,14 @@ namespace GlideGame.Controllers
             Quaternion deltaRotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(rotationAmount, -14f, 14f) * Time.deltaTime);
             RigidBody.MoveRotation(RigidBody.rotation * deltaRotation);
         }
-        private void HandleInput()
+        private void HandleDrag()
         {
             if (Input.GetMouseButtonDown(0))
             {
                 dragStartPosition = Input.mousePosition;
                 isHandleRocketEnable = true;
+                animationManager.SetCommand(new RocketOpenedAnimationCommand(Animator));
+                animationManager.ExecuteCommand();
             }
 
             if (isHandleRocketEnable)
@@ -134,7 +140,14 @@ namespace GlideGame.Controllers
             {
                 isHandleRocketEnable = false;
                 dragDelta = Vector3.zero;
+                animationManager.SetCommand(new RocketClosedAnimationCommand(Animator));
+                animationManager.ExecuteCommand();
             }
+        }
+
+        public void PlayAnimator(string name, int layer = 0, float normalizedTime = 0)
+        {
+
         }
     }
 }
