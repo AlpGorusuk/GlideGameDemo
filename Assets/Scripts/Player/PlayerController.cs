@@ -47,8 +47,6 @@ namespace GlideGame.Controllers
         public Action<float> HandleThrowCallback;
         //Managers
         private readonly AnimationManager animationManager = new();
-        //Magic numbs
-        private const float rotationAmountCoeff = -1f;
         private void Start()
         {
             SetRbIsKinematic(true);
@@ -111,22 +109,19 @@ namespace GlideGame.Controllers
 
         private void HandleRocket()
         {
-            // Drag
+            //Drag
             float forceAmount = dragDelta.x * playerSetting.dragOffset * Time.deltaTime;
-
-            // //Gliding
+            //Gliding
             Vector3 currentVelocity = RigidBody.velocity;
             Vector3 newVelocity = new(currentVelocity.x,
                                               currentVelocity.y * playerSetting.glideOffset,
                                               currentVelocity.z);
             RigidBody.velocity = newVelocity;
 
-            // Rotate the character's transform around its local X-axis
-            float rotationAmount = forceAmount * playerSetting.rotationMultiplier * rotationAmountCoeff;
-            float clampedRotationAmount = Mathf.Clamp(rotationAmount, playerSetting.minRotationAmount, playerSetting.maxRotationAmount);
+            float rotationAmount = forceAmount * playerSetting.rotationMultiplier;
+            var clampedRotationAmount = Mathf.Clamp(rotationAmount, playerSetting.minRotationAmount, playerSetting.maxRotationAmount);
             Quaternion deltaRotation = Quaternion.Euler(playerSetting.glideRotationOffset, 0, 0);
-
-            transform.localRotation = Quaternion.Euler(0, 0, clampedRotationAmount);
+            transform.rotation = Quaternion.Euler(0, 0, clampedRotationAmount);
             Model.transform.localRotation = deltaRotation;
         }
         private void HandleInput()

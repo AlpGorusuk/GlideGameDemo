@@ -12,27 +12,26 @@ namespace GlideGame.Statemachine.States
         private Vector3 offset;
         private float smoothTime;
         private Vector3 velocity = Vector3.zero;
+        private float rotationSpeed;
 
-        public FollowState(Transform target, Transform cameraTransform, Vector3 offset, float smoothTime)
+        public FollowState(Transform target, float rotationSpeed, Transform cameraTransform, Vector3 offset, float smoothTime)
         {
             this.target = target;
             this.cameraTransform = cameraTransform;
             this.offset = offset;
             this.smoothTime = smoothTime;
+            this.rotationSpeed = rotationSpeed;
         }
 
         public void UpdateState()
         {
-            if (target is null) { return; }
+            if (target == null) { return; }
+            Quaternion desiredRotation = Quaternion.LookRotation(target.position - cameraTransform.position);
+            cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
+
+            // Kameranın hedefin arkasından bakmasını sağla ve pozisyon ofsetini uygula
             Vector3 desiredPosition = target.position + offset;
-            Vector3 smoothedPosition = Vector3.SmoothDamp(cameraTransform.position, desiredPosition, ref velocity, smoothTime);
-            cameraTransform.position = smoothedPosition;
-
-            cameraTransform.LookAt(target.position);
-
-            // Calculate desired rotation and rotate camera around the target
-            // Quaternion desiredRotation = Quaternion.LookRotation(target.position - cameraTransform.position, target.up);
-            // cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, desiredRotation, Time.deltaTime * 5);
+            cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, desiredPosition, ref velocity, smoothTime);
         }
     }
 
