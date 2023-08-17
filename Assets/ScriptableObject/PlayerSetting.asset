@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: PlayerSetting
   m_EditorClassIdentifier: 
   rotationSpeed: 720
-  rotationMultiplier: 10
+  rotationMultiplier: 1
+  rotationLerpSpeed: 5
+  minRotationAmount: -50
+  maxRotationAmount: 50
   throwAngle: 30
-  cameraOffset: {x: 0, y: 50, z: -45}
-  cameraRotation: {x: 0.25881904, y: 0, z: 0, w: 0.9659258}
-  dragOffset: 20
-  maxForceAmount: 10
-  minForceAmount: -10
+  cameraOffset: {x: 0, y: 30, z: -40}
+  dragOffset: 10
+  glideOffset: 0.5
+  glideRotationOffset: 45

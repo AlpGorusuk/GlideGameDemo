@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace GlideGame.Interfaces
 {
-    public interface ICameraFollow
+    public interface IJumpControl
     {
-        public Vector3 CameraOffset { get; }
+        void HandleCollision(Collision collision);
     }
+
 }

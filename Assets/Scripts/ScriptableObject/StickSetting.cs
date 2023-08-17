@@ -11,7 +11,6 @@ namespace GlideGame.ScriptableObjects
     {
         [Header("Camera")]
         public Vector3 cameraOffset;
-        public Quaternion cameraRotation;
         [Header("Drag")]
         public Vector3 dragStartPosition;
         [Range(200f, 400f)]

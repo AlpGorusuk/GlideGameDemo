@@ -6,7 +6,7 @@ namespace GlideGame.Animations
 {
     public class IdleAnimationCommand : IAnimationCommand
     {
-        private Animator animator;
+        private readonly Animator animator;
 
         public IdleAnimationCommand(Animator anim)
         {
@@ -22,7 +22,7 @@ namespace GlideGame.Animations
     // Walk animasyon komutu
     public class RocketOpenedAnimationCommand : IAnimationCommand
     {
-        private Animator animator;
+        private readonly Animator animator;
 
         public RocketOpenedAnimationCommand(Animator anim)
         {
@@ -38,7 +38,7 @@ namespace GlideGame.Animations
     // Jump animasyon komutu
     public class RocketClosedAnimationCommand : IAnimationCommand
     {
-        private Animator animator;
+        private readonly Animator animator;
 
         public RocketClosedAnimationCommand(Animator anim)
         {

@@ -19,7 +19,7 @@ namespace GlideGame.Controllers
             get
             {
                 if (animator == null)
-                    animator = GetComponent<Animator>();
+                    animator = GetComponentInChildren<Animator>();
                 return animator;
             }
         }
@@ -35,22 +35,26 @@ namespace GlideGame.Controllers
             }
         }
         public Vector3 CameraOffset => playerSetting.cameraOffset;
-        public Quaternion CameraRotation => playerSetting.cameraRotation;
         //
-        public bool isPlaying { get; set; }
-        public bool isHandleRocketEnable { get; set; }
+        public bool IsPlaying { get; set; }
+        public bool IsHandleRocketEnable { get; set; }
+        [SerializeField] private GameObject model;
+        public GameObject Model => model;
+
         private Vector3 dragStartPosition;
         private Vector3 dragDelta;
         //
         public Action<float> HandleThrowCallback;
         //Managers
-        private AnimationManager animationManager = new AnimationManager();
+        private readonly AnimationManager animationManager = new();
+        //Magic numbs
+        private const float rotationAmountCoeff = -1f;
         private void Start()
         {
             SetRbIsKinematic(true);
 
             HandleThrowCallback += HandleThrow;
-            HandleThrowCallback += x => { isPlaying = true; };
+            HandleThrowCallback += x => { IsPlaying = true; };
 
             animationManager.SetCommand(new IdleAnimationCommand(Animator));
             animationManager.ExecuteCommand();
@@ -64,17 +68,18 @@ namespace GlideGame.Controllers
         private void OnDestroy()
         {
             HandleThrowCallback -= HandleThrow;
-            HandleThrowCallback -= x => { isPlaying = true; };
+            HandleThrowCallback -= x => { IsPlaying = true; };
         }
 
         private void Update()
         {
-            if (!isPlaying) return;
-            HandleDrag();
+            if (!IsPlaying) return;
+            HandleInput();
         }
         private void FixedUpdate()
         {
-            if (!isHandleRocketEnable && isPlaying) { HandleRotation(); return; }
+            if (!IsPlaying) return;
+            if (!IsHandleRocketEnable) { HandleRotation(); return; }
             HandleRocket();
         }
         private void SetPlayerParent()
@@ -88,49 +93,53 @@ namespace GlideGame.Controllers
         }
         private void HandleThrow(float speed)
         {
-            Debug.Log(speed);
             float radianAngle = playerSetting.throwAngle * Mathf.Deg2Rad;
             float xVel = speed * Mathf.Cos(radianAngle);
             float yVel = speed * Mathf.Sin(radianAngle);
 
-            Vector3 throwSpeed = new Vector3(0, yVel, xVel);
+            Vector3 throwSpeed = new(0, yVel, xVel);
             RigidBody.AddForce(throwSpeed, ForceMode.Impulse);
             Debug.Log("Thrown!");
         }
 
         private void HandleRotation()
         {
-            Quaternion rotation = Quaternion.Euler(Vector3.right * playerSetting.rotationSpeed * Time.deltaTime);
-            RigidBody.MoveRotation(RigidBody.rotation * rotation);
+            float rotationAmount = playerSetting.rotationSpeed * Time.fixedTime;
+            Quaternion targetRotation = Quaternion.Euler(rotationAmount, 0, 0);
+            Model.transform.rotation = Quaternion.Lerp(Model.transform.rotation, targetRotation, playerSetting.rotationLerpSpeed * Time.fixedTime);
         }
 
         private void HandleRocket()
         {
+            // Drag
             float forceAmount = dragDelta.x * playerSetting.dragOffset * Time.deltaTime;
-            forceAmount = Mathf.Clamp(forceAmount, playerSetting.minForceAmount, playerSetting.maxForceAmount);
-            Vector3 force = Vector3.right * forceAmount;
-            RigidBody.AddForce(force, ForceMode.Force);
 
+            // //Gliding
             Vector3 currentVelocity = RigidBody.velocity;
-            Vector3 newVelocity = new Vector3(currentVelocity.x, currentVelocity.y * 0.5f, currentVelocity.z);
+            Vector3 newVelocity = new(currentVelocity.x,
+                                              currentVelocity.y * playerSetting.glideOffset,
+                                              currentVelocity.z);
             RigidBody.velocity = newVelocity;
 
-            float rotationAmount = forceAmount * playerSetting.rotationMultiplier;
-            // Yeni rotasyon açısını hesapla ve sınırla
-            Quaternion deltaRotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(rotationAmount, -14f, 14f) * Time.deltaTime);
-            RigidBody.MoveRotation(RigidBody.rotation * deltaRotation);
+            // Rotate the character's transform around its local X-axis
+            float rotationAmount = forceAmount * playerSetting.rotationMultiplier * rotationAmountCoeff;
+            float clampedRotationAmount = Mathf.Clamp(rotationAmount, playerSetting.minRotationAmount, playerSetting.maxRotationAmount);
+            Quaternion deltaRotation = Quaternion.Euler(playerSetting.glideRotationOffset, 0, 0);
+
+            transform.localRotation = Quaternion.Euler(0, 0, clampedRotationAmount);
+            Model.transform.localRotation = deltaRotation;
         }
-        private void HandleDrag()
+        private void HandleInput()
         {
             if (Input.GetMouseButtonDown(0))
             {
                 dragStartPosition = Input.mousePosition;
-                isHandleRocketEnable = true;
+                IsHandleRocketEnable = true;
                 animationManager.SetCommand(new RocketOpenedAnimationCommand(Animator));
                 animationManager.ExecuteCommand();
             }
 
-            if (isHandleRocketEnable)
+            if (IsHandleRocketEnable)
             {
                 Vector3 dragCurrentPosition = Input.mousePosition;
                 dragDelta = dragCurrentPosition - dragStartPosition;
@@ -138,16 +147,11 @@ namespace GlideGame.Controllers
 
             if (Input.GetMouseButtonUp(0))
             {
-                isHandleRocketEnable = false;
+                IsHandleRocketEnable = false;
                 dragDelta = Vector3.zero;
                 animationManager.SetCommand(new RocketClosedAnimationCommand(Animator));
                 animationManager.ExecuteCommand();
             }
-        }
-
-        public void PlayAnimator(string name, int layer = 0, float normalizedTime = 0)
-        {
-
         }
     }
 }

@@ -41,7 +41,6 @@ namespace GlideGame.Controllers
         public float AnimationTime { get; private set; }
         //Camera
         public Vector3 CameraOffset => stickSetting.cameraOffset;
-        public Quaternion CameraRotation => stickSetting.cameraRotation;
         //Managers
         private AnimationManager animationManager = new AnimationManager();
 

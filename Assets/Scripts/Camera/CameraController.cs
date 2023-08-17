@@ -17,9 +17,9 @@ namespace GlideGame.Controllers
             stateManager = new CameraStateManager();
         }
 
-        public void SetCameraController(Transform target, Quaternion desiredRot, Vector3 offset)
+        public void SetCameraController(Transform target, Vector3 offset)
         {
-            stateManager.SetState(new FollowState(target, transform, desiredRot, offset, smoothTime));
+            stateManager.SetState(new FollowState(target, transform, offset, smoothTime));
         }
 
         private void FixedUpdate()

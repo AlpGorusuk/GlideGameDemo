@@ -18,7 +18,6 @@ namespace GlideGame.Statemachine.States
         public override void Enter()
         {
             base.Enter();
-            CameraController.Instance.SetCameraController(_stickController.transform, _stickController.CameraRotation, _stickController.CameraOffset);
             _stickController.ActivateStickCallback?.Invoke();
             _stickController.ReleaseCallback += x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
             _stickController.ReleaseCallback += _playerController.HandleThrowCallback;
