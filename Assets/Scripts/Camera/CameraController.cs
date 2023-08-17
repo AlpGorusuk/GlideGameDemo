@@ -9,7 +9,7 @@ namespace GlideGame.Controllers
     public class CameraController : Singleton<CameraController>
     {
         public float smoothTime = 0.3f;
-        public float rotationSpeed = 5f;
+        public float rotationSpeed = 0.3f;
 
         private CameraStateManager stateManager;
         public override void Awake()
@@ -18,11 +18,15 @@ namespace GlideGame.Controllers
             stateManager = new CameraStateManager();
         }
 
-        public void SetCameraController(Transform target, Vector3 offset)
+        public void SetCameraControllerFollowState(Transform target, Vector3 offset)
         {
-            stateManager.SetState(new FollowState(target, rotationSpeed, transform, offset, smoothTime));
+            stateManager.SetState(new FollowState(target, transform, offset, smoothTime));
         }
-        private Vector3 velocity = Vector3.zero;
+
+        public void SetCameraControllerRotateState(Transform target, Vector3 offset)
+        {
+            stateManager.SetState(new RotateState(target, rotationSpeed, transform, offset, smoothTime));
+        }
 
         private void FixedUpdate()
         {

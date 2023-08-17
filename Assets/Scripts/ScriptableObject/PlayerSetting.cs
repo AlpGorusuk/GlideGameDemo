@@ -19,7 +19,7 @@ namespace GlideGame.ScriptableObjects
         public Vector3 cameraOffset;
         [Header("Movement")]
         public float dragOffset = 10f;
-        public float glideOffset = 0.5f;
-        public float glideRotationOffset = 45f;
+        public float glideMultiplier = 0.5f;
+        public float ModelGlideXRotation = 45f;
     }
 }

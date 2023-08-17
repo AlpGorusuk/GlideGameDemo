@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c295d4b9047a294b89376d5f6a9c9a4, type: 3}
   m_Name: StickSetting
   m_EditorClassIdentifier: 
-  cameraOffset: {x: 36, y: 15, z: -36}
-  cameraRotation: {x: 0, y: -0.38268346, z: 0, w: 0.9238795}
-  dragStartPosition: {x: 500.68893, y: 324.80045, z: 0}
-  maxDragDistance: 250
-  minDragDistance: 100
+  dragStartPosition: {x: 471.16162, y: 422.0669, z: 0}
+  dragMultiplier: 0.5
+  maxDragDistance: 200
+  minDragDistance: 50
   dragOffset: 0.001

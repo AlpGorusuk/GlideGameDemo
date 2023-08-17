@@ -9,13 +9,12 @@ namespace GlideGame.ScriptableObjects
     [CreateAssetMenu(fileName = "StickSetting", menuName = "Game/StickSetting", order = 1)]
     public class StickSetting : ScriptableObject
     {
-        [Header("Camera")]
-        public Vector3 cameraOffset;
         [Header("Drag")]
         public Vector3 dragStartPosition;
-        [Range(200f, 400f)]
+        public float dragMultiplier = 0.5f;
+        [Range(100f, 400f)]
         public float maxDragDistance = 200f;
-        [Range(50f, 100f)]
+        [Range(0f, 100f)]
         public float minDragDistance = 50f;
         public float dragOffset = 0.001f;
     }
