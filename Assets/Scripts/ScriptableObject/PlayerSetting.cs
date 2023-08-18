@@ -11,15 +11,12 @@ namespace GlideGame.ScriptableObjects
     {
         [Header("Rotation")]
         public float rotationSpeed;
-        public float rotationMultiplier = 5f;
-        public float rotationLerpSpeed = 5f;
         public float minRotationAmount, maxRotationAmount;
         public float throwAngle;
-        [Header("Camera")]
-        public Vector3 cameraOffset;
-        [Header("Movement")]
-        public float dragOffset = 10f;
-        public float glideMultiplier = 0.5f;
-        public float ModelGlideXRotation = 45f;
+        [Header("Glide Settings")]
+        public float glideSpeed = 30f;
+        public float glidingRotationSpeed = 0.5f;
+        public float glidingXPosition = 45f;
+        public float glidingLerpValue = 0.1f;
     }
 }

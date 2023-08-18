@@ -8,24 +8,25 @@ namespace GlideGame.Statemachine.States
     public class FollowState : ICameraState
     {
         private Transform target;
+        private Transform cameraPivot;
         private Transform cameraTransform;
-        private Vector3 offset;
         private float smoothTime;
+        private Vector3 velocity = Vector3.zero;
 
-        public FollowState(Transform target, Transform cameraTransform, Vector3 offset, float smoothTime)
+        public FollowState(Transform target, Transform cameraPivot, Transform cameraTransform, float smoothTime)
         {
             this.target = target;
+            this.cameraPivot = cameraPivot;
             this.cameraTransform = cameraTransform;
-            this.offset = offset;
             this.smoothTime = smoothTime;
         }
 
         public void UpdateState()
         {
             if (target == null) { return; }
-            Vector3 desiredPosition = target.position + offset;
-            Vector3 smoothedPosition = Vector3.Lerp(cameraTransform.position, desiredPosition, smoothTime);
-            cameraTransform.position = smoothedPosition;
+            Vector3 targetPosition = cameraPivot.position;
+            Vector3 smoothPosition = Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref velocity, smoothTime);
+            cameraTransform.position = smoothPosition;
 
             cameraTransform.LookAt(target);
         }

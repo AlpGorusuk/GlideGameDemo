@@ -6,6 +6,6 @@ namespace GlideGame.Interfaces
 {
     public interface ICameraFollow
     {
-        public Vector3 CameraOffset { get; }
+        public Transform CameraFollowTransform { get; }
     }
 }

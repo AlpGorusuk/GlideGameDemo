@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace GlideGame.Controllers
 {
-    public class StickController : Singleton<StickController>
+    public class StickController : Singleton<StickController>, ICameraFollow
     {
         [SerializeField] private StickSetting stickSetting;
         [SerializeField] private Transform launchPoint;
@@ -39,6 +39,9 @@ namespace GlideGame.Controllers
         }
         public AnimationClip AnimationClip { get; private set; }
         public float AnimationTime { get; private set; }
+        [SerializeField] private Transform cameraFollowTransform;
+        public Transform CameraFollowTransform => cameraFollowTransform;
+
         //Managers
         private AnimationManager animationManager = new AnimationManager();
 

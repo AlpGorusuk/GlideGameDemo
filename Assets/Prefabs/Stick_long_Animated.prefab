@@ -64,6 +64,7 @@ Transform:
   m_Children:
   - {fileID: 176189752168184548}
   - {fileID: 5213213713254311220}
+  - {fileID: 6572390150096334547}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -102,6 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stickSetting: {fileID: 11400000, guid: 68d3622842ee76b46af1805ea7be3cbb, type: 2}
   launchPoint: {fileID: 3285023203185628935}
+  cameraFollowTransform: {fileID: 6572390150096334547}
 --- !u!1 &1179141430728455196
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,6 +136,37 @@ Transform:
   m_Father: {fileID: 4958039797303829317}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -11.202443, y: 2.1243584e-15, z: 2.5089116e-15}
+--- !u!1 &1909531121960572380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6572390150096334547}
+  m_Layer: 0
+  m_Name: CameraFollowTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6572390150096334547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909531121960572380}
+  m_LocalRotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 24.8, y: 10.5, z: -21.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4530613541617299818}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
 --- !u!1 &2084730701628549843
 GameObject:
   m_ObjectHideFlags: 0

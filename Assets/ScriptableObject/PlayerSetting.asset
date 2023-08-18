@@ -13,12 +13,10 @@ MonoBehaviour:
   m_Name: PlayerSetting
   m_EditorClassIdentifier: 
   rotationSpeed: 720
-  rotationMultiplier: 0.5
-  rotationLerpSpeed: 5
   minRotationAmount: -30
   maxRotationAmount: 30
   throwAngle: 30
-  cameraOffset: {x: 0, y: 20, z: -15}
-  dragOffset: 2
-  glideMultiplier: 0.5
-  ModelGlideXRotation: 60
+  glideSpeed: 50
+  glidingRotationSpeed: 0.75
+  glidingXPosition: 75
+  glidingLerpValue: 0.1

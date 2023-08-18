@@ -4,6 +4,7 @@ using GlideGame.Interfaces;
 using GlideGame.Managers;
 using GlideGame.ScriptableObjects;
 using GlideGame.Utils;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace GlideGame.Controllers
@@ -11,34 +12,38 @@ namespace GlideGame.Controllers
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : Singleton<PlayerController>, IPlayerController, ICameraFollow
     {
+        [Header("Settings")]
         [SerializeField] private PlayerSetting playerSetting;
-        //
+
+        [Header("References")]
         [SerializeField] private Animator animator;
         public Animator Animator => animator;
-
         [SerializeField] private Rigidbody _rigidbody;
         public Rigidbody RigidBody => _rigidbody;
+        [SerializeField] private Transform cameraFollowTransform;
+        public Transform CameraFollowTransform => cameraFollowTransform;
 
-        public Vector3 CameraOffset => playerSetting.cameraOffset;
-        public Quaternion CameraRotation { get; }
-        //
-        public AnimationClip AnimationClip => throw new NotImplementedException();
-        public float AnimationTime => throw new NotImplementedException();
-        //
+        [Header("Glide Settings")]
         private float targetRotation = 0f;
-        public float glideSpeed = 5f; // Adjust the glide speed as needed
-        public float rotationSpeed = 2f; // Adjust the rotation speed as needed
-        //
-        public bool isGliding { get; set; }
-        public bool isDragging { get; set; }
+        private bool isGliding = false;
+        private bool isDragging = false;
+
+        [Header("State")]
         private bool isPlaying = false;
         public bool IsPlaying { get { return isPlaying; } set { isPlaying = value; } }
-        private Quaternion initialRotation;
-        public GameObject Model;
 
+        [Header("Initial Rotation")]
+        private Quaternion initialRotation;
+
+        [Header("Drag")]
         private Vector3 dragStartPosition;
         private Vector3 dragDelta;
-        //
+
+        [Header("Model")]
+        [SerializeField] private GameObject model;
+        public GameObject Model { get { return model; } set { model = value; } }
+
+        [Header("Callbacks")]
         public Action<float> HandleThrowCallback;
         //Managers
         private readonly AnimationManager animationManager = new();
@@ -68,11 +73,14 @@ namespace GlideGame.Controllers
         {
             if (!IsPlaying) return;
             if (!isGliding) { HandleRotation(); }
+            // if (!isDragging)
+            // {
+            //     HandleModelRotate();
+            // }
             if (Input.GetMouseButtonDown(0))
             {
                 StartGlide();
                 dragStartPosition = Input.mousePosition;
-                // CameraController.Instance.SetCameraControllerRotateState(transform, CameraOffset);
             }
             else if (Input.GetMouseButton(0))
             {
@@ -82,6 +90,7 @@ namespace GlideGame.Controllers
                     dragDelta = dragCurrentPosition - dragStartPosition;
                     AdjustGlideDirection(dragDelta.x);
                     HandleModelRotationOnGlide();
+                    HandleModelRotate();
                 }
                 else
                 {
@@ -90,22 +99,17 @@ namespace GlideGame.Controllers
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                // CameraController.Instance.SetCameraControllerFollowState(transform, CameraOffset);
                 StopGlide();
-            }
-
-            // Update character movement and rotation
-            if (isGliding)
-            {
-                RotateCharacter();
             }
         }
         private void FixedUpdate()
         {
             if (!isPlaying) return;
             // Update character movement using Rigidbody velocity
-            if (!isGliding) return;
+            if (!isGliding) { return; }
             Glide();
+            // Update character movement and rotation
+            RotateCharacter();
         }
         //Glide
         private void StartGlide()
@@ -123,17 +127,18 @@ namespace GlideGame.Controllers
         }
         private void Glide()
         {
-            Vector3 glideVelocity = transform.forward * glideSpeed;
-            RigidBody.velocity = new Vector3(glideVelocity.x, RigidBody.velocity.y * playerSetting.glideMultiplier, RigidBody.velocity.z);
+            Vector3 glideVelocity = transform.forward * playerSetting.glideSpeed;
+            RigidBody.velocity = glideVelocity;
         }
         private void RotateCharacter()
         {
-            float rotationAmount = targetRotation * rotationSpeed * Time.deltaTime;
-            transform.Rotate(Vector3.up, rotationAmount);
+            float rotationYAmount = targetRotation * playerSetting.glidingRotationSpeed * Time.deltaTime;
+            Quaternion deltaRotation = Quaternion.Euler(0, rotationYAmount, 0);
+            RigidBody.MoveRotation(RigidBody.rotation * deltaRotation);
         }
         private void AdjustGlideDirection(float swipeDelta)
         {
-            targetRotation += swipeDelta * 1f * Time.deltaTime;
+            targetRotation += swipeDelta * Time.deltaTime;
             targetRotation = Mathf.Clamp(targetRotation, playerSetting.minRotationAmount, playerSetting.maxRotationAmount); // Limit rotation angle
         }
         //
@@ -165,8 +170,12 @@ namespace GlideGame.Controllers
         }
         private void HandleModelRotationOnGlide()
         {
-            Quaternion modelGlideRot = Quaternion.Euler(playerSetting.ModelGlideXRotation, 0, 0);
-            Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, modelGlideRot, 0.1f);
+            Quaternion modelGlideRot = Quaternion.Euler(playerSetting.glidingXPosition, 0, 0);
+            Model.transform.localRotation = Quaternion.Lerp(Model.transform.localRotation, modelGlideRot, playerSetting.glidingLerpValue);
+        }
+        private void HandleModelRotate()
+        {
+            Model.transform.Rotate(Vector3.up * dragDelta.x * -0.01f);
         }
     }
 }
