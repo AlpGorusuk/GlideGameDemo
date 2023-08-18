@@ -18,5 +18,5 @@ MonoBehaviour:
   throwAngle: 30
   glideSpeed: 50
   glidingRotationSpeed: 0.75
-  glidingXPosition: 75
+  glidingXPosition: 60
   glidingLerpValue: 0.1
