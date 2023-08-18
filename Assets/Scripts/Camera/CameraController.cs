@@ -20,7 +20,7 @@ namespace GlideGame.Controllers
         {
             stateManager.SetState(new FollowState(target, cameraPivot, transform, smoothTime));
         }
-        public void SetCameraControllerIdleState(Transform target)
+        public void SetCameraControllerIdleState(Transform target = null)
         {
             stateManager.SetState(new IdleState(target, transform, smoothTime));
         }

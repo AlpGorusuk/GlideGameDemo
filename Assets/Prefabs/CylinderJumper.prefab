@@ -255,4 +255,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da337ed6d4e77f3419155bbd9cfc23c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upwardForce: 5
+  upwardForce: 200

@@ -8,27 +8,29 @@ namespace GlideGame.Statemachine.States
 {
     public class OnStickState : State
     {
-        private StickController _stickController;
-        private PlayerController _playerController;
-        public OnStickState(StateMachine stateMachine, StickController stickController, PlayerController playerController) : base(stateMachine)
+        StickController stickController;
+        PlayerController playerController;
+        public OnStickState(StateMachine stateMachine, GameManager gameManager) : base(stateMachine, gameManager)
         {
-            _stickController = stickController;
-            _playerController = playerController;
+
         }
         public override void Enter()
         {
             base.Enter();
-            _stickController.ActivateStickCallback?.Invoke();
-            CameraController.Instance.SetCameraControllerIdleState(_stickController.CameraFollowTransform);
-            _stickController.ReleaseCallback += x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
-            _stickController.ReleaseCallback += _playerController.HandleThrowCallback;
+            stickController = gameManager.stickController;
+            playerController = gameManager.playerController;
+
+            stickController.ActivateStickCallback?.Invoke();
+            CameraController.Instance.SetCameraControllerIdleState(stickController.CameraFollowTransform);
+            stickController.ReleaseCallback += x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
+            stickController.ReleaseCallback += playerController.HandleThrowCallback;
         }
         public override void Exit()
         {
             base.Exit();
-            _stickController.DeActivateStickCallback?.Invoke();
-            _stickController.ReleaseCallback -= x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
-            _stickController.ReleaseCallback -= _playerController.HandleThrowCallback;
+            stickController.DeActivateStickCallback?.Invoke();
+            stickController.ReleaseCallback -= x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
+            stickController.ReleaseCallback -= playerController.HandleThrowCallback;
         }
     }
 }

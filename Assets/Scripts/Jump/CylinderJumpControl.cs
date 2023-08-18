@@ -1,6 +1,6 @@
 namespace GlideGame.Controllers
 {
-    public class CylinderControl : Jumper
+    public class CylinderJumpControl : Jumper
     {
         //
     }

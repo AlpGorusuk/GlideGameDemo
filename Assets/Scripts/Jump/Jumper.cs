@@ -5,11 +5,11 @@ namespace GlideGame.Controllers
 {
     public class Jumper : MonoBehaviour
     {
-        private IJumpControl jumpControl;
+        private ICollisionControl jumpControl;
 
         private void Start()
         {
-            jumpControl = GetComponent<IJumpControl>();
+            jumpControl = GetComponent<ICollisionControl>();
         }
 
         private void OnCollisionEnter(Collision collision)

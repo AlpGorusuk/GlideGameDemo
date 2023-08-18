@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GlideGame
 {
-    public class JumpControl : MonoBehaviour, IJumpControl
+    public class JumpControl : MonoBehaviour, ICollisionControl
     {
         [SerializeField] private float upwardForce = 5.0f; // Yukarıya uygulanacak kuvvet miktarı
 

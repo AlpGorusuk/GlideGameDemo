@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GlideGame.Interfaces
 {
-    public interface IJumpControl
+    public interface ICollisionControl
     {
         void HandleCollision(Collision collision);
     }
