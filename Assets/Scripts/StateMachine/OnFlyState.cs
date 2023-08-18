@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GlideGame.Statemachine.States
 {
-    public class OnFlyState : State
+    public class OnFlyState : GameState
     {
         PlayerController playerController;
         CameraController cameraController;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GlideGame.Statemachine.States
 {
-    public class OnStickState : State
+    public class OnStickState : GameState
     {
         StickController stickController;
         PlayerController playerController;

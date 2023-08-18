@@ -10,7 +10,7 @@ namespace GlideGame.Utils
         public TextMeshProUGUI fpsText;
         private float deltaTime;
 
-        private void Update()
+        public void UpdateFPSCounter()
         {
             deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
             float fps = 1.0f / deltaTime;

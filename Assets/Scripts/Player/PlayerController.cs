@@ -3,8 +3,9 @@ using GlideGame.Animations;
 using GlideGame.Interfaces;
 using GlideGame.Managers;
 using GlideGame.ScriptableObjects;
+using GlideGame.Statemachine;
+using GlideGame.Statemachine.States;
 using GlideGame.Utils;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace GlideGame.Controllers
@@ -34,6 +35,7 @@ namespace GlideGame.Controllers
 
         [Header("Initial Rotation")]
         private Quaternion initialRotation;
+        public Quaternion InitialRotation { get { return initialRotation; } set { initialRotation = value; } }
 
         [Header("Drag")]
         private Vector3 dragStartPosition;
@@ -47,21 +49,36 @@ namespace GlideGame.Controllers
         public Action<float> HandleThrowCallback;
         //Managers
         private readonly AnimationManager animationManager = new();
+        //States
+        public StateMachine stateMachine;
+        public OnStartState onStartState;
+        public OnPlayState onPlayState;
+        public OnLoseState onLoseState;
         private void Start()
         {
             SetRbIsKinematic(true);
             HandleThrowCallback += HandleThrow;
             HandleThrowCallback += x => { IsPlaying = true; };
+            //state
+            stateMachine = new StateMachine();
+            onStartState = new OnStartState(stateMachine, this);
+            onPlayState = new OnPlayState(stateMachine, this);
+            onLoseState = new OnLoseState(stateMachine, this);
+            //
+            stateMachine.Initialize(onStartState);
+        }
+
+        public void IdleAnimCommand()
+        {
             animationManager.SetCommand(new IdleAnimationCommand(Animator));
             animationManager.ExecuteCommand();
-            initialRotation = transform.rotation;
         }
 
         public void InitPlayer()
         {
             SetRbIsKinematic(false);
             SetPlayerParent();
-            transform.rotation = initialRotation;
+            transform.rotation = InitialRotation;
         }
         private void OnDestroy()
         {

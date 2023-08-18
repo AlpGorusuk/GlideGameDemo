@@ -5,11 +5,9 @@ namespace GlideGame.Statemachine.States
     public abstract class State
     {
         protected StateMachine stateMachine;
-        protected GameManager gameManager;
-        protected State(StateMachine stateMachine, GameManager gameManager)
+        protected State(StateMachine stateMachine)
         {
             this.stateMachine = stateMachine;
-            this.gameManager = gameManager;
         }
 
         public virtual void Enter()
