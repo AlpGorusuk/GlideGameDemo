@@ -12,13 +12,10 @@ namespace GlideGame
     {
         private GameManager gameManager;
         private StateMachine stateMachine;
-        private void Awake()
+        private void Start()
         {
-            if (gameManager == null)
-            {
-                gameManager = GameManager.Instance;
-                stateMachine = gameManager.stateMachine;
-            }
+            gameManager = GameManager.Instance;
+            stateMachine = gameManager.stateMachine;
         }
         public void HandleCollision(Collision collision)
         {

@@ -16,7 +16,11 @@ namespace GlideGame.Managers
         [HideInInspector] public PlayerController playerController;
         [HideInInspector] public StickController stickController;
         [HideInInspector] public CameraController cameraController;
-
+        public override void Awake()
+        {
+            base.Awake();
+            stateMachine = new StateMachine();
+        }
         private void Start()
         {
             playerController ??= PlayerController.Instance;
@@ -26,9 +30,8 @@ namespace GlideGame.Managers
             cameraController ??= CameraController.Instance;
 
             //States
-            stateMachine = new StateMachine();
-            // onStickState = new OnStickState(stateMachine, stickController, playerController);
-            // onFlyState = new OnFlyState(stateMachine, playerController);
+            onStickState = new OnStickState(stateMachine, this);
+            onFlyState = new OnFlyState(stateMachine, this);
             onFailState = new OnFailState(stateMachine, this);
 
             stateMachine.Initialize(onStickState);

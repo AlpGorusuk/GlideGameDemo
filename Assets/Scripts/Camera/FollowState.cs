@@ -15,9 +15,12 @@ namespace GlideGame.Statemachine.States
 
         public FollowState(Transform target, Transform cameraPivot, Transform cameraTransform, float smoothTime)
         {
-            this.target = target;
-            this.cameraPivot = cameraPivot;
-            this.cameraTransform = cameraTransform;
+            this.target ??= target;
+
+            this.cameraPivot ??= cameraPivot;
+
+            this.cameraTransform ??= cameraTransform;
+
             this.smoothTime = smoothTime;
         }
 

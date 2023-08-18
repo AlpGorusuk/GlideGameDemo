@@ -540,6 +540,8 @@ GameObject:
   - component: {fileID: 761502560}
   - component: {fileID: 761502559}
   - component: {fileID: 761502561}
+  - component: {fileID: 761502562}
+  - component: {fileID: 761502563}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -625,6 +627,30 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 13.717251, z: 10}
   m_Center: {x: 0, y: -6.8586254, z: 0}
+--- !u!114 &761502562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761502556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b61e0a4bfefa5c47b4bd6becf02f758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &761502563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761502556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81868af49dab9084698c7d0fd5effb83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,6 +994,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a36046f0605f79f4f84deb69a42e3f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
+  stickController: {fileID: 0}
+  cameraController: {fileID: 0}
 --- !u!1 &1734176582
 GameObject:
   m_ObjectHideFlags: 0

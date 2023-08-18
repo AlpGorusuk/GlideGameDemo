@@ -15,9 +15,7 @@ namespace GlideGame
 
             if (otherRigidbody != null)
             {
-                // Yukarıya kuvvet uygulama
                 otherRigidbody.AddForce(Vector3.up * upwardForce, ForceMode.Impulse);
-                Debug.Log("enter here");
             }
         }
     }
