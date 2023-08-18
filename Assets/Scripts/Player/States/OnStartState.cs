@@ -13,8 +13,11 @@ namespace GlideGame.Statemachine.States
         public override void Enter()
         {
             base.Enter();
+            playerController.SetRbIsKinematic(true);
             playerController.InitialRotation = playerController.transform.rotation;
             playerController.IdleAnimCommand();
+            playerController.HandleThrowCallback += playerController.HandleThrow;
+            playerController.HandleThrowCallback += x => { playerController.IsPlaying = true; };
         }
     }
 }

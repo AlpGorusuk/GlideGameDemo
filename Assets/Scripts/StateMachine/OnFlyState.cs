@@ -19,7 +19,7 @@ namespace GlideGame.Statemachine.States
             playerController = gameManager.playerController;
             cameraController = gameManager.cameraController;
 
-            playerController.InitPlayer();
+            playerController.ChangeState(playerController.onPlayState);
             cameraController.SetCameraControllerFollowState(playerController.transform, playerController.CameraFollowTransform);
         }
     }

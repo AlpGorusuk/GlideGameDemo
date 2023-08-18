@@ -10,5 +10,12 @@ namespace GlideGame.Statemachine.States
         public OnPlayState(StateMachine stateMachine, PlayerController playerController) : base(stateMachine, playerController)
         {
         }
+        public override void Enter()
+        {
+            base.Enter();
+            playerController.SetRbIsKinematic(false);
+            playerController.SetPlayerParent();
+            playerController.transform.rotation = playerController.InitialRotation;
+        }
     }
 }

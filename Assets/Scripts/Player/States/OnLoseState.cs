@@ -10,5 +10,10 @@ namespace GlideGame.Statemachine.States
         public OnLoseState(StateMachine stateMachine, PlayerController playerController) : base(stateMachine, playerController)
         {
         }
+        public override void Enter()
+        {
+            base.Enter();
+            playerController.IsPlaying = false;
+        }
     }
 }

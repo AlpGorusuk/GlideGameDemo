@@ -56,9 +56,6 @@ namespace GlideGame.Controllers
         public OnLoseState onLoseState;
         private void Start()
         {
-            SetRbIsKinematic(true);
-            HandleThrowCallback += HandleThrow;
-            HandleThrowCallback += x => { IsPlaying = true; };
             //state
             stateMachine = new StateMachine();
             onStartState = new OnStartState(stateMachine, this);
@@ -68,18 +65,6 @@ namespace GlideGame.Controllers
             stateMachine.Initialize(onStartState);
         }
 
-        public void IdleAnimCommand()
-        {
-            animationManager.SetCommand(new IdleAnimationCommand(Animator));
-            animationManager.ExecuteCommand();
-        }
-
-        public void InitPlayer()
-        {
-            SetRbIsKinematic(false);
-            SetPlayerParent();
-            transform.rotation = InitialRotation;
-        }
         private void OnDestroy()
         {
             HandleThrowCallback -= HandleThrow;
@@ -90,10 +75,6 @@ namespace GlideGame.Controllers
         {
             if (!IsPlaying) return;
             if (!isGliding) { HandleRotation(); }
-            // if (!isDragging)
-            // {
-            //     HandleModelRotate();
-            // }
             if (Input.GetMouseButtonDown(0))
             {
                 StartGlide();
@@ -159,17 +140,17 @@ namespace GlideGame.Controllers
             targetRotation = Mathf.Clamp(targetRotation, playerSetting.minRotationAmount, playerSetting.maxRotationAmount); // Limit rotation angle
         }
         //
-        private void SetPlayerParent()
+        public void SetPlayerParent()
         {
             Transform targetTransform = GameplayController.Instance.LevelTransform;
             transform.SetParent(targetTransform);
         }
-        private void SetRbIsKinematic(bool isKinematic)
+        public void SetRbIsKinematic(bool isKinematic)
         {
             RigidBody.isKinematic = isKinematic;
         }
         //Throw
-        private void HandleThrow(float speed)
+        public void HandleThrow(float speed)
         {
             float radianAngle = playerSetting.throwAngle * Mathf.Deg2Rad;
             float xVel = speed * Mathf.Cos(radianAngle);
@@ -193,6 +174,17 @@ namespace GlideGame.Controllers
         private void HandleModelRotate()
         {
             Model.transform.Rotate(Vector3.up * dragDelta.x * -0.01f);
+        }
+        //Animation Commands
+        public void IdleAnimCommand()
+        {
+            animationManager.SetCommand(new IdleAnimationCommand(Animator));
+            animationManager.ExecuteCommand();
+        }
+        //Changer States
+        public void ChangeState(PlayerState state)
+        {
+            stateMachine.ChangeState(state);
         }
     }
 }

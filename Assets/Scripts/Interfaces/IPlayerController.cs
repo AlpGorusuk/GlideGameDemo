@@ -8,6 +8,5 @@ namespace GlideGame.Interfaces
     {
         public Rigidbody RigidBody { get; }
         public bool IsPlaying { get; set; }
-        public void InitPlayer();
     }
 }
