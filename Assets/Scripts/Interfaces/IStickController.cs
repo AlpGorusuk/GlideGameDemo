@@ -4,11 +4,9 @@ using UnityEngine;
 
 namespace GlideGame.Interfaces
 {
-    public interface IPlayerController
+    public interface IStickController
     {
-        public Rigidbody RigidBody { get; }
-        public Collider Collider { get; }
-        public Vector3 Position { get; }
         public bool IsPlaying { get; set; }
+        public bool IsBendEnable { get; set; }
     }
 }

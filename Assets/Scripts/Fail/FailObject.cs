@@ -19,8 +19,7 @@ namespace GlideGame
         private void OnCollisionEnter(Collision collision)
         {
             State gameState = gameManager.stateMachine.CurrentState;
-            if (gameState is OnFailState) return;
-            failControl?.HandleCollision(collision);
+            if (gameState.GetType() == typeof(OnFlyState)) { failControl?.HandleCollision(collision); }
         }
     }
 }

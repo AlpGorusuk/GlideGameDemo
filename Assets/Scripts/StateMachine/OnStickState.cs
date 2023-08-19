@@ -20,15 +20,19 @@ namespace GlideGame.Statemachine.States
             stickController = gameManager.stickController;
             playerController = gameManager.playerController;
 
-            stickController.ActivateStickCallback?.Invoke();
+            // playerController.SetPlayerParent(stickController.LaunchPoint);
+            // playerController.Position = stickController.LaunchPoint.position;
+
             CameraController.Instance.SetCameraControllerIdleState(stickController.CameraFollowTransform);
             stickController.ReleaseCallback += x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
             stickController.ReleaseCallback += playerController.HandleThrowCallback;
+
+            // stickController.ActivateStickCallback?.Invoke(true);
         }
         public override void Exit()
         {
             base.Exit();
-            stickController.DeActivateStickCallback?.Invoke();
+            // stickController.ActivateStickCallback?.Invoke(false);
             stickController.ReleaseCallback -= x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
             stickController.ReleaseCallback -= playerController.HandleThrowCallback;
         }

@@ -19,10 +19,13 @@ namespace GlideGame.Controllers
         [Header("References")]
         [SerializeField] private Animator animator;
         public Animator Animator => animator;
+        [SerializeField] private Collider _collider;
+        public Collider Collider => _collider;
         [SerializeField] private Rigidbody _rigidbody;
         public Rigidbody RigidBody => _rigidbody;
         [SerializeField] private Transform cameraFollowTransform;
         public Transform CameraFollowTransform => cameraFollowTransform;
+        public Vector3 Position { get { return transform.position; } set { transform.position = value; } }
 
         [Header("Glide Settings")]
         private float targetRotation = 0f;
@@ -140,14 +143,17 @@ namespace GlideGame.Controllers
             targetRotation = Mathf.Clamp(targetRotation, playerSetting.minRotationAmount, playerSetting.maxRotationAmount); // Limit rotation angle
         }
         //
-        public void SetPlayerParent()
+        public void SetPlayerParent(Transform targetTransform)
         {
-            Transform targetTransform = GameplayController.Instance.LevelTransform;
             transform.SetParent(targetTransform);
         }
         public void SetRbIsKinematic(bool isKinematic)
         {
             RigidBody.isKinematic = isKinematic;
+        }
+        public void EnableCollider(bool isEnable)
+        {
+            Collider.enabled = isEnable;
         }
         //Throw
         public void HandleThrow(float speed)

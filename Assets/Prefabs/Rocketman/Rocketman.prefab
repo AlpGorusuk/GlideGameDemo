@@ -66,6 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSetting: {fileID: 11400000, guid: 6eced0cc8033dff4d9f61d694339d142, type: 2}
   animator: {fileID: 191824924546205780}
+  _collider: {fileID: 3493701436219972787}
   _rigidbody: {fileID: 3493701436219972785}
   cameraFollowTransform: {fileID: 3856182492188378955}
   model: {fileID: 6519002078435006269}

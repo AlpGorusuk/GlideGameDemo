@@ -15,8 +15,8 @@ MonoBehaviour:
   rotationSpeed: 720
   minRotationAmount: -30
   maxRotationAmount: 30
-  throwAngle: 30
-  glideSpeed: 50
-  glidingRotationSpeed: 0.75
+  throwAngle: 45
+  glideSpeed: 20
+  glidingRotationSpeed: 0.5
   glidingXPosition: 60
   glidingLerpValue: 0.1
