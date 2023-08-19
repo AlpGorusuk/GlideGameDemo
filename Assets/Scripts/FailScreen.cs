@@ -16,6 +16,7 @@ namespace GlideGame.UI.Screens
         [SerializeField] private RectTransform panelTransform;
         [SerializeField] private Ease animationEase;
         [SerializeField] private float animationDuration;
+        public Action FailCallback;
         protected Vector3 initScale = Vector3.zero, finalScale = Vector3.one;
         public void Show()
         {
@@ -36,6 +37,7 @@ namespace GlideGame.UI.Screens
         public void UpdateObserver(IObservable observable)
         {
             Hide();
+            FailCallback?.Invoke();
         }
     }
 }

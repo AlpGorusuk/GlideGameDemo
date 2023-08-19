@@ -63,6 +63,8 @@ namespace GlideGame.Controllers
             onLoseState = new OnLoseState(stateMachine, this);
             //
             stateMachine.Initialize(onStartState);
+            HandleThrowCallback += HandleThrow;
+            HandleThrowCallback += x => { IsPlaying = true; };
         }
 
         private void OnDestroy()
@@ -102,7 +104,7 @@ namespace GlideGame.Controllers
         }
         private void FixedUpdate()
         {
-            if (!isPlaying) return;
+            if (!IsPlaying) return;
             // Update character movement using Rigidbody velocity
             if (!isGliding) { return; }
             Glide();
@@ -113,15 +115,13 @@ namespace GlideGame.Controllers
         private void StartGlide()
         {
             isGliding = true;
-            animationManager.SetCommand(new RocketOpenedAnimationCommand(Animator));
-            animationManager.ExecuteCommand();
+            RocketOpenedAnimCommand();
         }
         private void StopGlide()
         {
             isGliding = false;
             isDragging = false;
-            animationManager.SetCommand(new RocketClosedAnimationCommand(Animator));
-            animationManager.ExecuteCommand();
+            RocketClosedAnimCommand();
         }
         private void Glide()
         {
@@ -181,6 +181,17 @@ namespace GlideGame.Controllers
             animationManager.SetCommand(new IdleAnimationCommand(Animator));
             animationManager.ExecuteCommand();
         }
+        public void RocketOpenedAnimCommand()
+        {
+            animationManager.SetCommand(new RocketOpenedAnimationCommand(Animator));
+            animationManager.ExecuteCommand();
+        }
+        public void RocketClosedAnimCommand()
+        {
+            animationManager.SetCommand(new RocketClosedAnimationCommand(Animator));
+            animationManager.ExecuteCommand();
+        }
+
         //Changer States
         public void ChangeState(PlayerState state)
         {

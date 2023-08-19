@@ -14,12 +14,12 @@ GameObject:
   - component: {fileID: 3553063472999128473}
   - component: {fileID: 8628889640824583261}
   - component: {fileID: 7738056103793645134}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FailObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3553063472999128479
 Transform:
@@ -97,7 +97,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.9207369, z: 1}
+  m_Size: {x: 1.027751, y: 0.9207369, z: 1.031472}
   m_Center: {x: 0, y: -0.039631557, z: 0}
 --- !u!114 &8628889640824583261
 MonoBehaviour:
@@ -137,12 +137,12 @@ GameObject:
   - component: {fileID: 3553063473195135466}
   - component: {fileID: 3553063473195135477}
   - component: {fileID: 5433738534025404563}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Jumper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3553063473195135465
 Transform:
@@ -220,7 +220,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.063955, y: 0.08001317, z: 1.0686282}
+  m_Size: {x: 1.1, y: 0.08001317, z: 1.1}
   m_Center: {x: 0, y: 0.45999342, z: 0}
 --- !u!114 &3553063473195135477
 MonoBehaviour:
@@ -256,12 +256,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3553063473321521970}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CubeJumper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3553063473321521970
 Transform:

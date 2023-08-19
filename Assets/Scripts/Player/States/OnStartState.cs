@@ -16,8 +16,6 @@ namespace GlideGame.Statemachine.States
             playerController.SetRbIsKinematic(true);
             playerController.InitialRotation = playerController.transform.rotation;
             playerController.IdleAnimCommand();
-            playerController.HandleThrowCallback += playerController.HandleThrow;
-            playerController.HandleThrowCallback += x => { playerController.IsPlaying = true; };
         }
     }
 }
