@@ -24,6 +24,7 @@ namespace GlideGame.Controllers
         [SerializeField] private Rigidbody _rigidbody;
         public Rigidbody RigidBody => _rigidbody;
         [SerializeField] private Transform cameraFollowTransform;
+        public Quaternion Rotation { get { return transform.rotation; } set { transform.rotation = value; } }
         public Transform CameraFollowTransform => cameraFollowTransform;
         public Vector3 Position { get { return transform.position; } set { transform.position = value; } }
 
@@ -50,6 +51,7 @@ namespace GlideGame.Controllers
 
         [Header("Callbacks")]
         public Action<float> HandleThrowCallback;
+        public Action<Transform> StartCallback => InitPlayer;
         //Managers
         private readonly AnimationManager animationManager = new();
         //States
@@ -57,6 +59,13 @@ namespace GlideGame.Controllers
         public OnStartState onStartState;
         public OnPlayState onPlayState;
         public OnLoseState onLoseState;
+        //
+        Quaternion initQuaternion = Quaternion.Euler(0, 0, 0);
+        private void InitPlayer(Transform target)
+        {
+            SetPlayerParent(target);
+            ResetPlayer();
+        }
         private void Start()
         {
             //state
@@ -94,7 +103,7 @@ namespace GlideGame.Controllers
             else if (isDragging)
                 HandleGlideDrag();
 
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0) && isGliding)
                 StopGlide();
         }
         private void FixedUpdate()
@@ -143,45 +152,6 @@ namespace GlideGame.Controllers
             HandleModelRotationOnGlide();
             HandleModelRotate();
         }
-
-        // private void Update()
-        // {
-        //     if (!IsPlaying) return;
-        //     if (!isGliding) { HandleRotation(); }
-        //     if (Input.GetMouseButtonDown(0))
-        //     {
-        //         StartGlide();
-        //         dragStartPosition = Input.mousePosition;
-        //     }
-        //     else if (Input.GetMouseButton(0))
-        //     {
-        //         if (isDragging)
-        //         {
-        //             Vector3 dragCurrentPosition = Input.mousePosition;
-        //             dragDelta = dragCurrentPosition - dragStartPosition;
-        //             AdjustGlideDirection(dragDelta.x);
-        //             HandleModelRotationOnGlide();
-        //             HandleModelRotate();
-        //         }
-        //         else
-        //         {
-        //             isDragging = true;
-        //         }
-        //     }
-        //     else if (Input.GetMouseButtonUp(0))
-        //     {
-        //         StopGlide();
-        //     }
-        // }
-        // private void FixedUpdate()
-        // {
-        //     if (!IsPlaying) return;
-        //     // Update character movement using Rigidbody velocity
-        //     if (!isGliding) { return; }
-        //     Glide();
-        //     // Update character movement and rotation
-        //     RotateCharacter();
-        // }
         //Glide
         private void StartGlide()
         {
@@ -248,6 +218,13 @@ namespace GlideGame.Controllers
         private void HandleModelRotate()
         {
             Model.transform.Rotate(Vector3.up * dragDelta.x * -0.01f);
+        }
+        //Reset
+        private void ResetPlayer()
+        {
+            transform.localPosition = Vector3.zero;
+            transform.rotation = initQuaternion;
+            Model.transform.rotation = initQuaternion;
         }
         //Animation Commands
         public void IdleAnimCommand()

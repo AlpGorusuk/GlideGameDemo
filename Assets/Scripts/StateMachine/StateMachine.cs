@@ -20,6 +20,7 @@ namespace GlideGame.Statemachine
             CurrentState.Exit();
             CurrentState = newState;
             Debug.Log("CurrentState" + CurrentState);
+            Debug.Log("---------------------------");
             newState.Enter();
         }
         public void Update_Statemachine()

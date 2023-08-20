@@ -9,6 +9,7 @@ namespace GlideGame.Interfaces
         public Rigidbody RigidBody { get; }
         public Collider Collider { get; }
         public Vector3 Position { get; }
+        public Quaternion Rotation { get; }
         public bool IsPlaying { get; set; }
     }
 }

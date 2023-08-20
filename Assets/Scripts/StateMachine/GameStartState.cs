@@ -11,6 +11,8 @@ namespace GlideGame.Statemachine.States
     public class GameStartState : GameState
     {
         StickController stickController;
+        PlayerController playerController;
+        CameraController cameraController;
         Action StartGameCallback;
         public GameStartState(StateMachine stateMachine, GameManager gameManager) : base(stateMachine, gameManager)
         {
@@ -19,7 +21,12 @@ namespace GlideGame.Statemachine.States
         {
             base.Enter();
             stickController = gameManager.stickController;
+            playerController = gameManager.playerController;
+            cameraController = gameManager.cameraController;
+
             StartGameCallback += stickController.StartCallback;
+            playerController.StartCallback?.Invoke(stickController.LaunchPoint);
+            cameraController.SetCameraControllerIdleState(stickController.CameraFollowTransform);
         }
         public override void Update()
         {

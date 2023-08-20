@@ -23,7 +23,6 @@ namespace GlideGame.Statemachine.States
             cameraController = gameManager.cameraController;
 
             stickController.ActivateInputCallback(true);
-            cameraController.SetCameraControllerIdleState(stickController.CameraFollowTransform);
             stickController.ReleaseCallback += x =>
             {
                 stateMachine.ChangeState(gameManager.onFlyState);

@@ -18,7 +18,7 @@ namespace GlideGame.Statemachine.States
             playerController.SetRbIsKinematic(false);
             playerController.EnableCollider(true);
             playerController.SetPlayerParent(gameplayController.LevelTransform);
-            playerController.transform.rotation = playerController.InitialRotation;
+            playerController.Rotation = playerController.InitialRotation;
         }
     }
 }

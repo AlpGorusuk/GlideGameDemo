@@ -24,7 +24,9 @@ namespace GlideGame.Statemachine.States
             if (target == null) { return; }
             Vector3 targetPosition = target.position;
             Vector3 smoothPosition = Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref velocity, smoothTime);
+
             cameraTransform.position = smoothPosition;
+            cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, target.rotation, smoothTime);
         }
     }
 }
