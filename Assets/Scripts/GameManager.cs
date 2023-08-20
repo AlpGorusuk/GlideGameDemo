@@ -21,6 +21,7 @@ namespace GlideGame.Managers
         public override void Awake()
         {
             base.Awake();
+            Application.targetFrameRate = 60;
             stateMachine = new StateMachine();
         }
         private void Start()
