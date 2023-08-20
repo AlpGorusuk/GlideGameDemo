@@ -8,11 +8,7 @@ namespace GlideGame.Managers
     public class AnimationManager
     {
         private IAnimationCommand currentCommand;
-
-        public void SetCommand(IAnimationCommand command)
-        {
-            currentCommand = command;
-        }
+        public IAnimationCommand CurrentCommand { get => currentCommand; set => currentCommand = value; }
 
         public void ExecuteCommand(int layer = 0, float normalizedTime = 0)
         {

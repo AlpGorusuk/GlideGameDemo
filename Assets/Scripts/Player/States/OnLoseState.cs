@@ -13,7 +13,7 @@ namespace GlideGame.Statemachine.States
         public override void Enter()
         {
             base.Enter();
-            playerController.RocketClosedAnimCommand();
+            playerController.UpdateAnimCommandForLoseState();
             playerController.IsPlaying = false;
         }
     }

@@ -64,22 +64,52 @@ namespace GlideGame.Controllers
             onStartState = new OnStartState(stateMachine, this);
             onPlayState = new OnPlayState(stateMachine, this);
             onLoseState = new OnLoseState(stateMachine, this);
-            //
             stateMachine.Initialize(onStartState);
-            HandleThrowCallback += HandleThrow;
-            HandleThrowCallback += x => { IsPlaying = true; };
+            //
+            HandleThrowCallback += x =>
+            {
+                IsPlaying = true;
+                HandleThrow(x);
+            };
         }
 
         private void OnDestroy()
         {
-            HandleThrowCallback -= HandleThrow;
-            HandleThrowCallback -= x => { IsPlaying = true; };
+            HandleThrowCallback -= x =>
+                        {
+                            IsPlaying = true;
+                            HandleThrow(x);
+                        };
         }
 
         private void Update()
         {
-            if (!IsPlaying) return;
-            if (!isGliding) { HandleRotation(); }
+            if (!IsPlaying)
+                return;
+
+            HandleInput();
+
+            if (!isGliding)
+                HandleRotation();
+            else if (isDragging)
+                HandleGlideDrag();
+
+            if (Input.GetMouseButtonUp(0))
+                StopGlide();
+        }
+        private void FixedUpdate()
+        {
+            if (!IsPlaying)
+                return;
+
+            if (isGliding)
+            {
+                Glide();
+                RotateCharacter();
+            }
+        }
+        private void HandleInput()
+        {
             if (Input.GetMouseButtonDown(0))
             {
                 StartGlide();
@@ -87,33 +117,71 @@ namespace GlideGame.Controllers
             }
             else if (Input.GetMouseButton(0))
             {
-                if (isDragging)
-                {
-                    Vector3 dragCurrentPosition = Input.mousePosition;
-                    dragDelta = dragCurrentPosition - dragStartPosition;
-                    AdjustGlideDirection(dragDelta.x);
-                    HandleModelRotationOnGlide();
-                    HandleModelRotate();
-                }
-                else
-                {
-                    isDragging = true;
-                }
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                StopGlide();
+                HandleDrag();
             }
         }
-        private void FixedUpdate()
+        private void HandleDrag()
         {
-            if (!IsPlaying) return;
-            // Update character movement using Rigidbody velocity
-            if (!isGliding) { return; }
-            Glide();
-            // Update character movement and rotation
-            RotateCharacter();
+            if (isDragging)
+            {
+                Vector3 dragCurrentPosition = Input.mousePosition;
+                dragDelta = dragCurrentPosition - dragStartPosition;
+                AdjustGlideDirection(dragDelta.x);
+                HandleModelRotationOnGlide();
+                HandleModelRotate();
+            }
+            else
+            {
+                isDragging = true;
+            }
         }
+        private void HandleGlideDrag()
+        {
+            Vector3 dragCurrentPosition = Input.mousePosition;
+            dragDelta = dragCurrentPosition - dragStartPosition;
+            AdjustGlideDirection(dragDelta.x);
+            HandleModelRotationOnGlide();
+            HandleModelRotate();
+        }
+
+        // private void Update()
+        // {
+        //     if (!IsPlaying) return;
+        //     if (!isGliding) { HandleRotation(); }
+        //     if (Input.GetMouseButtonDown(0))
+        //     {
+        //         StartGlide();
+        //         dragStartPosition = Input.mousePosition;
+        //     }
+        //     else if (Input.GetMouseButton(0))
+        //     {
+        //         if (isDragging)
+        //         {
+        //             Vector3 dragCurrentPosition = Input.mousePosition;
+        //             dragDelta = dragCurrentPosition - dragStartPosition;
+        //             AdjustGlideDirection(dragDelta.x);
+        //             HandleModelRotationOnGlide();
+        //             HandleModelRotate();
+        //         }
+        //         else
+        //         {
+        //             isDragging = true;
+        //         }
+        //     }
+        //     else if (Input.GetMouseButtonUp(0))
+        //     {
+        //         StopGlide();
+        //     }
+        // }
+        // private void FixedUpdate()
+        // {
+        //     if (!IsPlaying) return;
+        //     // Update character movement using Rigidbody velocity
+        //     if (!isGliding) { return; }
+        //     Glide();
+        //     // Update character movement and rotation
+        //     RotateCharacter();
+        // }
         //Glide
         private void StartGlide()
         {
@@ -184,18 +252,26 @@ namespace GlideGame.Controllers
         //Animation Commands
         public void IdleAnimCommand()
         {
-            animationManager.SetCommand(new IdleAnimationCommand(Animator));
+            animationManager.CurrentCommand = new IdleAnimationCommand(Animator);
             animationManager.ExecuteCommand();
         }
         public void RocketOpenedAnimCommand()
         {
-            animationManager.SetCommand(new RocketOpenedAnimationCommand(Animator));
+            animationManager.CurrentCommand = new RocketOpenedAnimationCommand(Animator);
             animationManager.ExecuteCommand();
         }
         public void RocketClosedAnimCommand()
         {
-            animationManager.SetCommand(new RocketClosedAnimationCommand(Animator));
+            animationManager.CurrentCommand = new RocketClosedAnimationCommand(Animator);
             animationManager.ExecuteCommand();
+        }
+        public void UpdateAnimCommandForLoseState()
+        {
+            var currCommand = animationManager.CurrentCommand;
+            if (currCommand.GetType() == typeof(RocketOpenedAnimationCommand))
+            {
+                RocketClosedAnimCommand();
+            }
         }
 
         //Changer States

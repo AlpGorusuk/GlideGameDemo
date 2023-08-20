@@ -7,20 +7,20 @@ using UnityEngine;
 
 namespace GlideGame.Statemachine.States
 {
-    public class OnFailState : GameState
+    public class GameFailState : GameState
     {
         CameraController cameraController;
         PlayerController playerController;
+        UIController UIController;
         FailScreen failScreen;
-        public OnFailState(StateMachine stateMachine, GameManager gameManager) : base(stateMachine, gameManager)
+        public GameFailState(StateMachine stateMachine, GameManager gameManager) : base(stateMachine, gameManager)
         {
         }
         public override void Enter()
         {
             base.Enter();
             cameraController = gameManager.cameraController;
-
-            UIController UIController = gameManager.UIController;
+            UIController = gameManager.UIController;
             failScreen = UIController.FailScreen;
 
             playerController = gameManager.playerController;
@@ -28,15 +28,21 @@ namespace GlideGame.Statemachine.States
 
             cameraController.SetCameraControllerIdleState();
             failScreen.Show();
-            //Callbacks
-            failScreen.FailCallback += () => playerController.ChangeState(playerController.onStartState);
-            failScreen.FailCallback += () => stateMachine.ChangeState(gameManager.onStickState);
+            //Callback
+            failScreen.FailCallback += () =>
+            {
+                stateMachine.ChangeState(gameManager.onGameStartState);
+                playerController.ChangeState(playerController.onStartState);
+            };
         }
         public override void Exit()
         {
-            failScreen.FailCallback -= () => playerController.ChangeState(playerController.onStartState);
-            failScreen.FailCallback -= () => stateMachine.ChangeState(gameManager.onStickState);
             base.Exit();
+            failScreen.FailCallback -= () =>
+            {
+                stateMachine.ChangeState(gameManager.onGameStartState);
+                playerController.ChangeState(playerController.onStartState);
+            };
         }
     }
 }

@@ -10,6 +10,7 @@ namespace GlideGame.Statemachine.States
     {
         StickController stickController;
         PlayerController playerController;
+        CameraController cameraController;
         public OnStickState(StateMachine stateMachine, GameManager gameManager) : base(stateMachine, gameManager)
         {
 
@@ -19,22 +20,25 @@ namespace GlideGame.Statemachine.States
             base.Enter();
             stickController = gameManager.stickController;
             playerController = gameManager.playerController;
+            cameraController = gameManager.cameraController;
 
-            // playerController.SetPlayerParent(stickController.LaunchPoint);
-            // playerController.Position = stickController.LaunchPoint.position;
-
-            CameraController.Instance.SetCameraControllerIdleState(stickController.CameraFollowTransform);
-            stickController.ReleaseCallback += x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
-            stickController.ReleaseCallback += playerController.HandleThrowCallback;
-
-            // stickController.ActivateStickCallback?.Invoke(true);
+            stickController.ActivateInputCallback(true);
+            cameraController.SetCameraControllerIdleState(stickController.CameraFollowTransform);
+            stickController.ReleaseCallback += x =>
+            {
+                stateMachine.ChangeState(gameManager.onFlyState);
+                playerController.HandleThrowCallback(x);
+            };
         }
         public override void Exit()
         {
             base.Exit();
-            // stickController.ActivateStickCallback?.Invoke(false);
-            stickController.ReleaseCallback -= x => { stateMachine.ChangeState(GameManager.Instance.onFlyState); };
-            stickController.ReleaseCallback -= playerController.HandleThrowCallback;
+            stickController.ActivateInputCallback(false);
+            stickController.ReleaseCallback -= x =>
+            {
+                stateMachine.ChangeState(gameManager.onFlyState);
+                playerController.HandleThrowCallback(x);
+            };
         }
     }
 }

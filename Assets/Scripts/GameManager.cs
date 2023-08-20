@@ -9,9 +9,10 @@ namespace GlideGame.Managers
     public class GameManager : Singleton<GameManager>
     {
         public StateMachine stateMachine;
+        public GameStartState onGameStartState;
         public OnStickState onStickState;
         public OnFlyState onFlyState;
-        public OnFailState onFailState;
+        public GameFailState onFailState;
         //Settings
         [HideInInspector] public PlayerController playerController;
         [HideInInspector] public StickController stickController;
@@ -35,9 +36,10 @@ namespace GlideGame.Managers
             //States
             onStickState = new OnStickState(stateMachine, this);
             onFlyState = new OnFlyState(stateMachine, this);
-            onFailState = new OnFailState(stateMachine, this);
+            onFailState = new GameFailState(stateMachine, this);
+            onGameStartState = new GameStartState(stateMachine, this);
 
-            stateMachine.Initialize(onStickState);
+            stateMachine.Initialize(onGameStartState);
         }
         private void Update()
         {

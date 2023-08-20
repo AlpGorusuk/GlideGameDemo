@@ -11,21 +11,31 @@ using UnityEngine;
 
 namespace GlideGame.Controllers
 {
-    public class StickController : Singleton<StickController>, ICameraFollow
+    public class StickController : Singleton<StickController>, IStickController, ICameraFollow, IAnimationControl
     {
         [SerializeField] private StickSetting stickSetting;
+        public StickSetting StickSetting { get { return stickSetting; } set { stickSetting = value; } }
         [SerializeField] private Transform launchPoint;
+        public Transform LaunchPoint => launchPoint;
         //Actions
-        public Action ActivateStickCallback, DeActivateStickCallback;
+        public Action StartCallback => InitStick;
         public Action<float> ReleaseCallback;
+        public Action<bool> ActivateInputCallback => x => { isInputEnable = x; };
         //
-        private bool isStickActive = false;
         private bool isBendEnable = false;
-        //Magic Numbers
+        private bool isInputEnable = false;
+        //Animation Control
+        public int AnimatorLayer => animatorLayer;
+        public float DragDeltaConverter => dragDeltaConverter;
+        public string BendAnimationName => bendAnimationName;
+        public string ReleaseAnimationName => releaseAnimationName;
+        //Anim data
         private const int animatorLayer = -1;
         private const float dragDeltaConverter = -1;
-        private const string BendAnimationName = "Bend";
-        private const string ReleaseAnimationName = "Release";
+        private const string bendAnimationName = "Bend";
+        private const string releaseAnimationName = "Release";
+        public AnimationClip AnimationClip { get; set; }
+        public float AnimationTime { get; set; }
         //Animation Control
         private Animator animator;
         public Animator Animator
@@ -37,54 +47,58 @@ namespace GlideGame.Controllers
                 return animator;
             }
         }
-        public AnimationClip AnimationClip { get; private set; }
-        public float AnimationTime { get; private set; }
         [SerializeField] private Transform cameraFollowTransform;
         public Transform CameraFollowTransform => cameraFollowTransform;
 
         //Managers
         private AnimationManager animationManager = new AnimationManager();
 
-        private void Start()
+        private void InitStick()
         {
-            ActivateStickCallback = () => { isStickActive = true; };
-            DeActivateStickCallback = () => { isStickActive = false; };
-            //Anim command
-            animationManager.SetCommand(new IdleAnimationCommand(Animator));
+            StartBendAnimation();
+
+            animationManager.CurrentCommand = new IdleAnimationCommand(Animator);
             animationManager.ExecuteCommand();
         }
-
-        public void Update()
+        private void Update()
         {
-            if (!isStickActive) { return; }
-            BendStick();
-            ReleaseStick();
+            if (!isInputEnable) return;
+            HandleInput();
         }
-
-        private void BendStick()
+        private void HandleInput()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
-                stickSetting.dragStartPosition = Input.mousePosition;
-                isBendEnable = true;
-                AnimationClip = Animator.GetAnimationClipByName(BendAnimationName);
+                ContinueBendAnimation();
             }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                EndBendAnimation();
+            }
+        }
+        private void StartBendAnimation()
+        {
+            StickSetting.dragStartPosition = Input.mousePosition;
+            AnimationClip = Animator.GetAnimationClipByName(BendAnimationName);
 
+            isBendEnable = true;
+        }
+        private void ContinueBendAnimation()
+        {
             if (isBendEnable)
             {
                 Vector3 dragCurrentPosition = Input.mousePosition;
                 Vector3 dragDelta = dragCurrentPosition - stickSetting.dragStartPosition;
 
-                AnimationTime = dragDelta.x * stickSetting.dragOffset * dragDeltaConverter;
-                animationManager.SetCommand(new BendAnimationCommand(Animator));
+                AnimationTime = dragDelta.x * StickSetting.dragOffset * dragDeltaConverter;
+                animationManager.CurrentCommand = new BendAnimationCommand(Animator);
                 float normalizedTime = Mathf.Clamp01(AnimationTime / AnimationClip.length);
                 animationManager.ExecuteCommand(animatorLayer, normalizedTime);
             }
         }
-
-        private void ReleaseStick()
+        private void EndBendAnimation()
         {
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0) && isBendEnable)
             {
                 isBendEnable = false;
 
@@ -93,7 +107,7 @@ namespace GlideGame.Controllers
                 float dragDistance = Mathf.Clamp(clampVal, stickSetting.minDragDistance, stickSetting.maxDragDistance) * stickSetting.dragMultiplier;
 
                 AnimationClip = Animator.GetAnimationClipByName(ReleaseAnimationName);
-                animationManager.SetCommand(new ReleaseAnimationCommand(Animator));
+                animationManager.CurrentCommand = new ReleaseAnimationCommand(Animator);
                 float normalizedTime = 1 - Mathf.Clamp01(AnimationTime / AnimationClip.length);
                 animationManager.ExecuteCommand(animatorLayer, normalizedTime);
 

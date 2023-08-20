@@ -18,7 +18,7 @@ namespace GlideGame.Controllers
         private void OnCollisionEnter(Collision collision)
         {
             State gameState = gameManager.stateMachine.CurrentState;
-            if (gameState is OnFailState) return;
+            if (gameState is GameFailState) return;
             jumpControl?.HandleCollision(collision);
         }
     }
