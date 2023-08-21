@@ -36,6 +36,9 @@ namespace GlideGame.Controllers
         private const string releaseAnimationName = "Release";
         public AnimationClip AnimationClip { get; set; }
         public float AnimationTime { get; set; }
+        //Drag
+        private Vector3 dragStartPosition;
+        private Vector3 dragDelta;
         //Animation Control
         private Animator animator;
         public Animator Animator
@@ -78,7 +81,7 @@ namespace GlideGame.Controllers
         }
         private void StartBendAnimation()
         {
-            StickSetting.dragStartPosition = Input.mousePosition;
+            dragStartPosition = Input.mousePosition;
             AnimationClip = Animator.GetAnimationClipByName(BendAnimationName);
 
             isBendEnable = true;
@@ -88,8 +91,7 @@ namespace GlideGame.Controllers
             if (isBendEnable)
             {
                 Vector3 dragCurrentPosition = Input.mousePosition;
-                Vector3 dragDelta = dragCurrentPosition - stickSetting.dragStartPosition;
-
+                dragDelta = dragCurrentPosition - dragStartPosition;
                 AnimationTime = dragDelta.x * StickSetting.dragOffset * dragDeltaConverter;
                 animationManager.CurrentCommand = new BendAnimationCommand(Animator);
                 float normalizedTime = Mathf.Clamp01(AnimationTime / AnimationClip.length);
@@ -102,15 +104,11 @@ namespace GlideGame.Controllers
             {
                 isBendEnable = false;
 
-                Vector3 dragEndPosition = Input.mousePosition;
-                var clampVal = Vector3.Distance(dragEndPosition, stickSetting.dragStartPosition);
-                float dragDistance = Mathf.Clamp(clampVal, stickSetting.minDragDistance, stickSetting.maxDragDistance) * stickSetting.dragMultiplier;
-
+                float dragDistance = Mathf.Clamp(Mathf.Abs(dragDelta.x), stickSetting.minDragDistance, stickSetting.maxDragDistance) * stickSetting.dragMultiplier;
                 AnimationClip = Animator.GetAnimationClipByName(ReleaseAnimationName);
                 animationManager.CurrentCommand = new ReleaseAnimationCommand(Animator);
                 float normalizedTime = 1 - Mathf.Clamp01(AnimationTime / AnimationClip.length);
                 animationManager.ExecuteCommand(animatorLayer, normalizedTime);
-
                 ReleaseCallback?.Invoke(dragDistance);
             }
         }

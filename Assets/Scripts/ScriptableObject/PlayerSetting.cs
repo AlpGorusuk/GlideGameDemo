@@ -13,6 +13,7 @@ namespace GlideGame.ScriptableObjects
         public float rotationSpeed;
         public float minRotationAmount, maxRotationAmount;
         public float throwAngle;
+        public float modelRotateMultiplier = -0.01f;
         [Header("Glide Settings")]
         public float glideSpeed = 30f;
         public float glidingRotationSpeed = 0.5f;

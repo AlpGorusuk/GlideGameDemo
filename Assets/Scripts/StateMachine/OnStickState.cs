@@ -10,7 +10,6 @@ namespace GlideGame.Statemachine.States
     {
         StickController stickController;
         PlayerController playerController;
-        CameraController cameraController;
         public OnStickState(StateMachine stateMachine, GameManager gameManager) : base(stateMachine, gameManager)
         {
 
@@ -20,9 +19,10 @@ namespace GlideGame.Statemachine.States
             base.Enter();
             stickController = gameManager.stickController;
             playerController = gameManager.playerController;
-            cameraController = gameManager.cameraController;
 
             stickController.ActivateInputCallback(true);
+
+            if (stickController.ReleaseCallback != null) return;
             stickController.ReleaseCallback += x =>
             {
                 stateMachine.ChangeState(gameManager.onFlyState);
@@ -33,6 +33,11 @@ namespace GlideGame.Statemachine.States
         {
             base.Exit();
             stickController.ActivateInputCallback(false);
+        }
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (stickController.ReleaseCallback is null) return;
             stickController.ReleaseCallback -= x =>
             {
                 stateMachine.ChangeState(gameManager.onFlyState);

@@ -37,5 +37,9 @@ namespace GlideGame.Statemachine
                 CurrentState.FixedUpdate();
             }
         }
+        public void OnDestroy()
+        {
+            CurrentState.OnDestroy();
+        }
     }
 }

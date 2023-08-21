@@ -28,16 +28,19 @@ namespace GlideGame.Statemachine.States
 
             cameraController.SetCameraControllerIdleState();
             failScreen.Show();
+
             //Callback
+            if (failScreen.FailCallback != null) return;
             failScreen.FailCallback += () =>
             {
                 stateMachine.ChangeState(gameManager.onGameStartState);
                 playerController.ChangeState(playerController.onStartState);
             };
         }
-        public override void Exit()
+        public override void OnDestroy()
         {
-            base.Exit();
+            base.OnDestroy();
+            if (failScreen.FailCallback is null) return;
             failScreen.FailCallback -= () =>
             {
                 stateMachine.ChangeState(gameManager.onGameStartState);

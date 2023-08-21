@@ -10,7 +10,6 @@ namespace GlideGame.ScriptableObjects
     public class StickSetting : ScriptableObject
     {
         [Header("Drag")]
-        public Vector3 dragStartPosition;
         public float dragMultiplier = 0.5f;
         [Range(100f, 400f)]
         public float maxDragDistance = 200f;

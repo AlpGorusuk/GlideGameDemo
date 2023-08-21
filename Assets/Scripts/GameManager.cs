@@ -42,6 +42,10 @@ namespace GlideGame.Managers
 
             stateMachine.Initialize(onGameStartState);
         }
+        private void OnDestroy()
+        {
+            stateMachine.OnDestroy();
+        }
         private void Update()
         {
             stateMachine.Update_Statemachine();

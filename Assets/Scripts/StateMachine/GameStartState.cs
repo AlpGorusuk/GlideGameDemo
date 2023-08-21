@@ -16,6 +16,7 @@ namespace GlideGame.Statemachine.States
         Action StartGameCallback;
         public GameStartState(StateMachine stateMachine, GameManager gameManager) : base(stateMachine, gameManager)
         {
+
         }
         public override void Enter()
         {
@@ -24,7 +25,7 @@ namespace GlideGame.Statemachine.States
             playerController = gameManager.playerController;
             cameraController = gameManager.cameraController;
 
-            StartGameCallback += stickController.StartCallback;
+            StartGameCallback = stickController.StartCallback;
             playerController.StartCallback?.Invoke(stickController.LaunchPoint);
             cameraController.SetCameraControllerIdleState(stickController.CameraFollowTransform);
         }
@@ -37,9 +38,7 @@ namespace GlideGame.Statemachine.States
         {
             base.Exit();
             StartGameCallback?.Invoke();
-            StartGameCallback -= stickController.StartCallback;
         }
-
         private void StartGame()
         {
             if (Input.GetMouseButtonDown(0))

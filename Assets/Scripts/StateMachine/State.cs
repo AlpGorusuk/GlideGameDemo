@@ -29,6 +29,10 @@ namespace GlideGame.Statemachine.States
         {
 
         }
+        public virtual void OnDestroy()
+        {
+
+        }
 
         protected virtual void DisplayOnUI()
         {
